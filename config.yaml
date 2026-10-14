@@ -1,0 +1,113 @@
+# Pilot configuration, v2: translate-then-paraphrase on the Ship of Theseus corpus.
+# Every notebook reads this file through pilot.config.load_config(). Paths are relative to the repo root.
+# Values marked PROVISIONAL are the plan's recommended defaults (docs/pilot_execution_plan.md §9),
+# pending team sign-off. The v1 (MULTITuDE) config is in notebooks/archive/multitude/config_v1.yaml.
+
+seed: 6120
+
+paths:
+  corpus_src: ../Ship_of_theseus_paraphrased_copus   # upstream clone; copied into paths.sot by 01
+  sot: data/sot                                      # read-only local copy of the corpus
+  derived: data/derived
+  calls: data/calls                                  # append-only JSONL call logs (also the cache)
+  kaggle_jobs: data/kaggle                           # job files sent to / records returned from Kaggle
+  results: results
+
+data:
+  datasets: [xsum, yelp]                 # PROVISIONAL: news + reviews, most complete keys, short texts
+  authors: [Human, OpenAI, LLAMA]        # PROVISIONAL: the three most complete sources
+  n_keys_per_dataset: 50                 # PROVISIONAL: keys with all authors in the length window
+  # The corpus's LLM texts begin with the first ~30 words of the key's Human text (their prompt).
+  # Strip that shared prefix plus the sentence it cuts into from every author's text, so each T0 holds
+  # only the author's own words (Human included, for symmetry).
+  strip_prompt_prefix: true              # PROVISIONAL
+  min_words: 40                          # PROVISIONAL: window on own words after stripping (80 leaves < 50 keys)
+  max_words: 400
+  n_reference_per_dataset_author: 100    # from train_datasets/; translated too, for style fitting and floors
+  n_floor_pairs_per_dataset: 200         # unrelated Human pairs from the reference set
+  n_check_texts_per_language: 20         # per-language prompt/length check in 03
+
+languages:
+  source: en
+  targets: [zh, es]
+  names: {en: English, zh: Simplified Chinese, es: Spanish}
+  units: {en: words, zh: chars, es: words}            # length unit for {n} and length ratios
+  nllb_codes: {en: eng_Latn, zh: zho_Hans, es: spa_Latn}
+
+translation:
+  temperature: 0                         # PROVISIONAL: most faithful and reproducible
+  round_trip: {language: zh, translator: nllb}        # PROVISIONAL: EN -> zh -> EN control arm
+  instruction: "Translate the following text into {language}. Translate faithfully: keep the meaning, tone, register and sentence structure; do not summarize, add or explain."
+  translators:                           # PROVISIONAL: crossed with the paraphrasers
+    nllb:
+      backend: kaggle-nllb
+      model: facebook/nllb-200-3.3B      # CC-BY-NC-4.0; sentence-split input (512-token limit)
+      step_name: nllb-translate
+    claude:
+      backend: anthropic
+      model: claude-haiku-4-5
+      step_name: claude-translate
+      usd_per_mtok: {input: 1.00, output: 5.00}
+      concurrency: 8
+
+paraphrase:
+  rounds: 3
+  temperature: 0.7
+  run_main: false                        # explicit go switch for the main chains in 03
+  min_max_tokens: 512
+  max_tokens_factor: 2.0
+  system: "Output only the rewritten text, with no preamble, notes or quotation marks."
+  # Length-target instructions; {n} = the arm's T0 length in languages.units, reused every round.
+  prompts:
+    en: "paraphrase the following text. keep similar length: about {n} words"
+    zh: "请改写以下文本。保持相似的长度：约{n}字。"
+    es: "Parafrasea el siguiente texto. Mantén una longitud similar: unas {n} palabras."   # needs a Spanish speaker's check
+  paraphrasers:
+    claude:
+      backend: anthropic
+      model: claude-haiku-4-5
+      step_name: claude
+      usd_per_mtok: {input: 1.00, output: 5.00}
+      concurrency: 8
+    qwen:
+      backend: kaggle-llm                # Qwen on Kaggle; engine below
+      model: Qwen/Qwen3.5-9B             # official weights, fp16 (T4 has no bf16), tensor-parallel over 2xT4
+      step_name: qwen
+      engine: transformers               # vllm is opt-in: `pip install vllm` replaced Kaggle's CUDA 12.8 torch and broke it
+      dtype: float16
+      tensor_parallel_size: 2            # used only by the vllm engine; transformers shards with device_map=auto
+
+g:
+  # G = each paraphraser's own text on the key's topic, generated like the corpus's LLM texts:
+  # a continuation of the first 30 tokens of the key's Human text (translated prefix in non-English arms).
+  prefix_words: 30                       # corpus used 30 tokens; words approximate that per language
+  prompt_verified: false                 # gates G in 03 until the continuation prompt is agreed
+  instruction: "Continue the following text. Write about {n} {unit} in {language}, in the same style."
+
+kaggle:
+  username: chwong0627
+  dataset_slug: cs6120-pilot-jobs        # private dataset holding job files and the call log
+  kernel_slug: cs6120-pilot-runner
+  smoke_test_passed: true               # Oct 11, 2026: 2xT4, transformers 5.16.1 + torch 2.11 cu128; 10/10 calls, 0 key mismatches
+
+export:
+  path: data/derived/sot_multilingual_paraphrased.csv
+
+budget:
+  api_usd_cap: 100                       # also set the same cap in the Anthropic Console
+
+measures:
+  embedding_model: BAAI/bge-m3
+  zh_segmenters: [jieba, pkuseg]
+
+# Go/no-go thresholds. PROPOSALS until the team agrees them; set locked: true before reading main-run output.
+go_no_go:
+  locked: false
+  translation_target_language_min_share: 0.95
+  translation_crosslingual_sim_min: 0.80     # median bge-m3 cosine, English T0 vs translation
+  translation_spot_check_pass_min: 0.90      # share of native-speaker spot checks rated acceptable
+  t0_style_separation_min_ratio: 1.10        # per language x translator: between- / within-author style distance
+  paraphrase_language_min_share: 0.95
+  length_within_20pct_min_share: 0.80
+  t3_normalized_content_sim_min: 0.50
+  segmentation_direction_must_agree: true
