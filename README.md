@@ -29,11 +29,40 @@ Files:
 - `scripts/`
 - `results/sot_analysis/`
 
+
 ### 2. Qwen Round-Trip Translation
 
-This experiment uses Qwen to investigate English-Spanish-English rewriting on the XSum subset.
+This experiment uses `Qwen/Qwen3-4B-Instruct-2507`, a general-purpose instruction-tuned language model, to investigate how English-Spanish-English round-trip translation affects textual preservation.
 
-The experiment includes comparisons of translation strategies and evaluations of lexical, semantic, and stylistic changes.
+- Dataset: XSum subset of the Ship of Theseus corpus
+- Documents evaluated: 3,208 valid texts
+- Pipeline: English (T0) -> Spanish -> English (T1)
+- Translation strategies: Literal and free translation
+- Baseline comparison: English-only ChatGPT paraphrasing
+
+The experiment evaluates changes across lexical, semantic, and stylistic dimensions, including multilingual E5 content distance, chrF loss, bigram loss, Burrows' Delta, cosine-based stylistic distance, function-word distance, and sentence-length changes.
+
+Selected median normalized changes from the original text (lower indicates less change):
+
+| Metric | Qwen Free Round-Trip | ChatGPT T1 |
+|---|---:|---:|
+| Content distance (E5) | 0.295 | 0.373 |
+| chrF loss | 0.377 | 0.546 |
+| Bigram loss | 0.484 | 0.660 |
+| Burrows' Delta | 0.319 | 0.522 |
+| Style cosine distance | 0.260 | 0.499 |
+| Function-word distance | 0.191 | 0.361 |
+| Sentence-length change | 0.207 | 0.453 |
+
+The results indicate that Qwen's free round-trip translation produced smaller measured changes than a single ChatGPT paraphrase across these dimensions. This comparison reflects the experiment's normalized evaluation framework and should not be directly compared with MADLAD's preservation scores.
+
+Qwen experiment files:
+
+- `experiments/qwen_translation/` - Translation, pilot, evaluation, and quality-estimation notebooks
+- `results/qwen_translation/metrics_items.csv` - Item-level evaluation metrics
+- `results/qwen_translation/metrics_summary.json` - Aggregated results
+
+The original Qwen translation-chain CSV outputs are not yet included in the repository.
 
 
 ### 3. MADLAD-400 Round-Trip Translation
