@@ -1,0 +1,182 @@
+{
+ "es|Qwen3-4B-Instruct-2507": {
+  "intervention": {
+   "int_G_L": 0.27425330877304077,
+   "int_G_F": 0.29072117805480957,
+   "int_G_F2": 0.284868985414505,
+   "int_extra": 0.01461143046617508,
+   "d_LF": 0.12966525554656982,
+   "noise_int_G": 0.003094106912612915,
+   "d_FF2": 0.05860636383295059
+  },
+  "F_vs_L": {
+   "n": 3208,
+   "a": 0.29072117805480957,
+   "b": 0.27425330877304077,
+   "share": 0.8690773067331671,
+   "p": 0.0
+  },
+  "LF_vs_noise": {
+   "n": 140,
+   "a": 0.12737248837947845,
+   "b": 0.05860636383295059,
+   "share": 0.95,
+   "p": 1.968784228637341e-24
+  },
+  "normalized": {
+   "T1 literal": {
+    "content_norm": 0.2601,
+    "surface_chrF_norm": 0.3039,
+    "surface_bigram_norm": 0.3886,
+    "style_delta_norm": 0.2444,
+    "style_cosdelta_norm": 0.1818,
+    "style_funcwords_norm": 0.1352,
+    "style_sentlen_norm": 0.1856
+   },
+   "T1 free": {
+    "content_norm": 0.2946,
+    "surface_chrF_norm": 0.3774,
+    "surface_bigram_norm": 0.4835,
+    "style_delta_norm": 0.319,
+    "style_cosdelta_norm": 0.2601,
+    "style_funcwords_norm": 0.1912,
+    "style_sentlen_norm": 0.2067
+   },
+   "chatgpt\u00d71": {
+    "content_norm": 0.3733,
+    "surface_chrF_norm": 0.5457,
+    "surface_bigram_norm": 0.6597,
+    "style_delta_norm": 0.5215,
+    "style_cosdelta_norm": 0.4987,
+    "style_funcwords_norm": 0.3613,
+    "style_sentlen_norm": 0.4531
+   },
+   "chatgpt\u00d72": {
+    "content_norm": 0.3977,
+    "surface_chrF_norm": 0.5719,
+    "surface_bigram_norm": 0.6942,
+    "style_delta_norm": 0.5507,
+    "style_cosdelta_norm": 0.526,
+    "style_funcwords_norm": 0.3948,
+    "style_sentlen_norm": 0.4891
+   },
+   "chatgpt\u00d73": {
+    "content_norm": 0.417,
+    "surface_chrF_norm": 0.6149,
+    "surface_bigram_norm": 0.7369,
+    "style_delta_norm": 0.579,
+    "style_cosdelta_norm": 0.5623,
+    "style_funcwords_norm": 0.4333,
+    "style_sentlen_norm": 0.4999
+   },
+   "pegasus(full)": {
+    "content_norm": 0.4173,
+    "surface_chrF_norm": 0.4524,
+    "surface_bigram_norm": 0.4661,
+    "style_delta_norm": 0.3635,
+    "style_cosdelta_norm": 0.2197,
+    "style_funcwords_norm": 0.1967,
+    "style_sentlen_norm": 0.7905
+   },
+   "dipper": {
+    "content_norm": 0.4599,
+    "surface_chrF_norm": 0.6305,
+    "surface_bigram_norm": 0.7267,
+    "style_delta_norm": 0.555,
+    "style_cosdelta_norm": 0.4684,
+    "style_funcwords_norm": 0.3728,
+    "style_sentlen_norm": 0.4871
+   }
+  },
+  "t1_vs_chatgpt": {
+   "content": {
+    "n": 3178,
+    "a": 0.1887388527393341,
+    "b": 0.23912706971168518,
+    "share": 0.8055380742605412,
+    "p": 0.0
+   },
+   "surface_chrF": {
+    "n": 3178,
+    "a": 0.28841700065196824,
+    "b": 0.41648369790937156,
+    "share": 0.92196349905601,
+    "p": 0.0
+   },
+   "surface_bigram": {
+    "n": 3178,
+    "a": 0.47429288924134283,
+    "b": 0.6465841327456573,
+    "share": 0.9002517306482064,
+    "p": 0.0
+   },
+   "style_delta": {
+    "n": 3178,
+    "a": 0.21279773233536992,
+    "b": 0.3477292816716769,
+    "share": 0.935179358086847,
+    "p": 0.0
+   },
+   "style_cosdelta": {
+    "n": 3178,
+    "a": 0.25229972970536335,
+    "b": 0.4841753392731071,
+    "share": 0.9021397105097546,
+    "p": 0.0
+   },
+   "style_funcwords": {
+    "n": 3178,
+    "a": 0.05923827150916561,
+    "b": 0.11193077008958241,
+    "share": 0.8492762743864065,
+    "p": 0.0
+   },
+   "style_sentlen": {
+    "n": 3178,
+    "a": 0.06744460256906981,
+    "b": 0.1482386504589432,
+    "share": 0.6932032724984267,
+    "p": 1.2644315038190242e-159
+   },
+   "entity_recall": {
+    "n": 3142,
+    "a": 0.8928571428571429,
+    "b": 0.84375,
+    "share": 0.4812221514958625,
+    "p": 3.2871733837452164e-69
+   },
+   "number_recall": {
+    "n": 2710,
+    "a": 1.0,
+    "b": 1.0,
+    "share": 0.27933579335793357,
+    "p": 5.122755938288543e-66
+   }
+  },
+  "style_over_content": {
+   "T1 free": {
+    "50": 1.1385253950098404,
+    "100": 1.0718545029044104,
+    "150": 1.0887831278868079,
+    "300": 1.0454888812405867,
+    "500": 1.0357618577330996
+   },
+   "chatgpt\u00d71": {
+    "50": 1.5150913027345627,
+    "100": 1.4066206255802554,
+    "150": 1.3974691035336764,
+    "300": 1.2799056854024835,
+    "500": 1.280950193384808
+   }
+  },
+  "content_by_source": {
+   "BigScience": 0.1975,
+   "Eleuther-AI": 0.1975,
+   "Human": 0.2171,
+   "LLAMA": 0.1872,
+   "OpenAI": 0.1709,
+   "PaLM": 0.1706,
+   "Tsinghua": 0.1884
+  }
+ }
+}
