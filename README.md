@@ -35,7 +35,6 @@ This experiment uses Qwen to investigate English-Spanish-English rewriting on th
 
 The experiment includes comparisons of translation strategies and evaluations of lexical, semantic, and stylistic changes.
 
-The Qwen implementation and results will be added separately by the team.
 
 ### 3. MADLAD-400 Round-Trip Translation
 
@@ -78,10 +77,8 @@ MADLAD experiment files:
 
 Original corpus: [Ship of Theseus Paraphrased Corpus](https://github.com/tripto03/Ship_of_theseus_paraphrased_copus)
 
-MADLAD-400: [Kudugunta et al.](https://arxiv.org/abs/2309.04662)
-
 Back-translation: [Sennrich et al. (2016)](https://aclanthology.org/P16-1009/)
 
 ## Project Status
 
-Active research project. The repository contains the English baseline and the preliminary MADLAD experiment. The Qwen experiment and expanded multilingual evaluations are being integrated.
+Active research project. 
