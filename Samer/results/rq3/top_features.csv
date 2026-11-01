@@ -1,0 +1,73 @@
+class,feature,coef,model
+madlad-3b,was endorsed,1.975754847887617,tfidf_word
+madlad-3b,endorsed by,1.975754847887617,tfidf_word
+madlad-3b,endorsed,1.975754847887617,tfidf_word
+madlad-3b,was approaching,1.9160751902154378,tfidf_word
+madlad-3b,approaching,1.7823265849949745,tfidf_word
+madlad-3b,approaching the,1.7823265849949745,tfidf_word
+madlad-3b,winning were,1.7041750671359162,tfidf_word
+madlad-3b,constant,1.6876782633179814,tfidf_word
+madlad-3b,constant element,1.6067408695560115,tfidf_word
+madlad-3b,element on,1.6067408695560115,tfidf_word
+madlad-3b,instigated,1.5846161573967092,tfidf_word
+madlad-3b,conducted,1.5685865917153385,tfidf_word
+nllb,what that,3.4102000329746587,tfidf_word
+nllb,have question,2.5237060145689805,tfidf_word
+nllb,president have,2.5237060145689805,tfidf_word
+nllb,that what,2.4624760443296494,tfidf_word
+nllb,question,2.1911842054864907,tfidf_word
+nllb,you,2.1244077781579285,tfidf_word
+nllb,dozen gunshots,2.0239719855018516,tfidf_word
+nllb,gunshots near,2.0239719855018516,tfidf_word
+nllb,gunshots,2.0239719855018516,tfidf_word
+nllb,the rebel,1.9204797821884287,tfidf_word
+nllb,was nearing,1.785503052758822,tfidf_word
+nllb,claim silver,1.7017818179958655,tfidf_word
+qwen3-4b,stated,4.5434659545201495,tfidf_word
+qwen3-4b,stated that,3.5893493189828303,tfidf_word
+qwen3-4b,following,2.3780321457679876,tfidf_word
+qwen3-4b,during,2.001110395771944,tfidf_word
+qwen3-4b,finished in,1.8994884493644417,tfidf_word
+qwen3-4b,these,1.7601090540945128,tfidf_word
+qwen3-4b,such as,1.7488794597023531,tfidf_word
+qwen3-4b,place,1.727336801832727,tfidf_word
+qwen3-4b,such,1.7018148421078776,tfidf_word
+qwen3-4b,member of,1.6753851985456072,tfidf_word
+qwen3-4b,secured,1.6614082509473072,tfidf_word
+qwen3-4b,old player,1.6577219382285802,tfidf_word
+madlad-3b,punct_16,5.251807368064769,stylometric
+madlad-3b,punct_14,1.8726138814900166,stylometric
+madlad-3b,dep_nsubj,1.7125578710890785,stylometric
+madlad-3b,punct_13,1.692177411703617,stylometric
+madlad-3b,fw_on,1.194200095464939,stylometric
+madlad-3b,punct_10,1.0875820765971318,stylometric
+madlad-3b,dep_xcomp,1.0859332532413783,stylometric
+madlad-3b,punct_12,0.976703734934461,stylometric
+madlad-3b,fw_with,0.8619068202436238,stylometric
+madlad-3b,fw_there,0.7645854919255397,stylometric
+madlad-3b,punct_08,0.7535636629131066,stylometric
+madlad-3b,pos_NOUN,0.74998349428892,stylometric
+nllb,punct_07,1.1504563376710955,stylometric
+nllb,dep_mark,1.07117508518936,stylometric
+nllb,dep_expl,0.8005366808112985,stylometric
+nllb,dep_nsubjpass,0.7643207887591998,stylometric
+nllb,fw_the,0.7533888277430377,stylometric
+nllb,fw_most,0.7506348319055101,stylometric
+nllb,fw_made,0.6938618478086889,stylometric
+nllb,fw_is,0.6546170342494089,stylometric
+nllb,dep_aux,0.6425973539253818,stylometric
+nllb,dep_ROOT,0.6283896063670982,stylometric
+nllb,fw_were,0.6241150079014836,stylometric
+nllb,pos_ADV,0.5466257227005155,stylometric
+qwen3-4b,word_len_mean,2.4352482671279585,stylometric
+qwen3-4b,dep_neg,1.5560366141877968,stylometric
+qwen3-4b,pos_VERB,1.4259657878599896,stylometric
+qwen3-4b,fw_he,1.3240969413721426,stylometric
+qwen3-4b,pos_SCONJ,1.2470481701495353,stylometric
+qwen3-4b,pos_PUNCT,1.1512334380907399,stylometric
+qwen3-4b,dep_cc,1.0530146915535943,stylometric
+qwen3-4b,punct_11,1.0471468821618415,stylometric
+qwen3-4b,dep_auxpass,1.0421914513604333,stylometric
+qwen3-4b,fw_who,0.9187659417375516,stylometric
+qwen3-4b,punct_01,0.9105921039973045,stylometric
+qwen3-4b,dep_prt,0.9067486195261957,stylometric
