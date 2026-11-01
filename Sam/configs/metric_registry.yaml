@@ -1,0 +1,96 @@
+# Every metric that appears anywhere in the project, under a NAMESPACED id, because the same short name
+# (e.g. "word_retention") has different definitions in different team code paths.
+#
+# kind:
+#   raw_similarity      higher = more alike, no normalization (1 = identical for most)
+#   raw_distance        higher = more changed, no normalization (0 = identical)
+#   normalized_retention  (s - floor) / (1 - floor); 1 = identical to T0, 0 = as close as an unrelated text
+#   normalized_change   raw_distance / random-pair baseline; 0 = unchanged, 1 = as different as an unrelated text
+# Values with different ids are NOT comparable, even if their short names match.
+
+madlad_v1:    # experiments/madlad_translation/madlad_explorer.ipynb, worker script (cell 5). ref = T0 (S), hyp = T1 (B_F)
+  bleu:
+    kind: raw_similarity
+    formula: sacrebleu.metrics.BLEU(effective_order=True).sentence_score(hyp, [ref]).score / 100
+    library: sacrebleu 2.5.1
+  rougeL:
+    kind: raw_similarity
+    formula: rouge_score RougeScorer(['rougeL'], use_stemmer=True).score(target=ref, prediction=hyp)['rougeL'].fmeasure
+    library: rouge-score 0.1.2
+  chrf:
+    kind: raw_similarity
+    formula: sacrebleu.metrics.CHRF().sentence_score(hyp, [ref]).score / 100   # defaults: char order 6, word order 0, beta 2
+  word_retention:
+    kind: raw_similarity
+    formula: sum_w min(c_ref(w), c_hyp(w)) / sum_w c_ref(w); tokens = re.findall(r"\b\w+\b", lower); ALL tokens, multiset (clipped) recall
+  function_word_cosine:
+    kind: raw_similarity
+    formula: cosine of raw counts over a fixed 52-word list (worker variable `func`); NaN if either vector is zero
+  punctuation_f1:
+    kind: raw_similarity
+    formula: 2 * sum_c min(n_ref(c), n_hyp(c)) / (N_ref + N_hyp) over characters . , ! ? ; : \ " ' ( ) -
+  exact_match:
+    kind: raw_similarity
+    formula: float(ref.strip() == hyp.strip())
+
+madlad_readme_only:   # reported in README.md and the MADLAD README; no code or per-item outputs in the repo
+  e5_cosine:
+    kind: raw_similarity
+    formula: UNKNOWN (model size, "query:"/"passage:" prefix, pooling and chunking not recorded); cosine similarity, not distance
+    reported_median: 0.9818
+  bertscore_f1:
+    kind: raw_similarity
+    formula: UNKNOWN (model, layer, idf, baseline rescaling not recorded)
+    reported_median: 0.9217
+    note: a median of 0.92 is typical of NON-rescaled roberta-large F1; the pilot's rescaled BERTScore lives on a different scale
+
+pilot:        # src/pilot/metrics.py (English paraphrase baseline). ref = T0, hyp = Tn
+  # Stage 2 finding (reports/stage2/metric_name_clashes.csv): on the 197 MADLAD T0/T1 pairs, pilot.bleu ==
+  # madlad_v1.bleu and pilot.rougeL == madlad_v1.rougeL for every item (max diff 0). The BLEU smoothing
+  # settings differ, but they only matter when some n-gram order has zero matches, which never happens on
+  # these documents; that may not hold for heavily rewritten T3 text. pilot.word_retention differs on all
+  # 197 items (median 0.793 vs 0.836).
+  bleu:
+    kind: raw_similarity
+    formula: sacrebleu.sentence_bleu(hyp, [ref], smooth_method="exp").score / 100
+  rouge1/rouge2/rougeL:
+    kind: raw_similarity
+    formula: RougeScorer(use_stemmer=True).score(ref, hyp)[...].fmeasure
+  word_retention:
+    kind: raw_similarity
+    formula: |{w in ref} - stopwords ∩ {w in hyp}| / |{w in ref} - stopwords|; regex [A-Za-z]+(?:'[a-z]+)?; sklearn ENGLISH_STOP_WORDS removed; TYPE (set) recall
+  bertscore_f:
+    kind: raw_similarity
+    formula: LongBertScore, roberta-large layer 17, no idf, baseline-rescaled, windowed for >510 tokens
+  sbert_cos:
+    kind: raw_similarity
+    formula: all-mpnet-base-v2, mean of unit chunk embeddings (~200 words), cosine
+  "<metric>_ret":
+    kind: normalized_retention
+    formula: (s - floor_dataset) / (1 - floor_dataset); floor = mean over 200 random unrelated reference pairs per dataset (notebooks/sot_analysis.ipynb)
+
+qwen_v1:      # experiments/qwen_translation/degree_zero_metrics.ipynb. x = T1 (or paraphrase), t0 = T0. All CHANGE metrics.
+  content:
+    kind: raw_distance
+    formula: Euclidean distance ||e(x) - e(t0)|| of unit multilingual-e5-base embeddings ("query: " prefix). For unit vectors cos = 1 - d^2/2; this is a DISTANCE, not the README's E5 cosine
+  surface_chrF:
+    kind: raw_distance
+    formula: 1 - sacrebleu.sentence_chrf(x, [t0]).score / 100
+  surface_bigram:
+    kind: raw_distance
+    formula: 1 - |bigrams(t0) ∩ bigrams(x)| / |bigrams(t0)|
+  style_funcwords:
+    kind: raw_distance
+    formula: cosine DISTANCE of per-word rates over a fixed 75-word list
+  style_sentlen:
+    kind: raw_distance
+    formula: |mean_sent_len(x) - mean_sent_len(t0)| / mean_sent_len(t0)
+  style_delta_N / style_cosdelta_N:
+    kind: raw_distance
+    formula: Burrows' Delta / Cosine Delta on z-scored N most frequent words (z from the domain train split), N in 50..500
+  entity_recall / number_recall:
+    kind: raw_similarity
+    formula: set recall of capitalized non-initial words / digit strings
+  "<metric>_norm":
+    kind: normalized_change
+    formula: raw / mean raw between item i and item i+7 within domain x source (random-pair baseline)

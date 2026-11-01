@@ -1,0 +1,3 @@
+direction,ok,finish,blocking,expected_words_found,seconds,output
+en->es,True,stop,,gobierno|puente|río,2.15,El gobierno anunció el martes que el nuevo puente sobre el río abrirá el próximo año.
+es->en,True,stop,,government|bridge|river,0.97,The government said on Tuesday that the new bridge over the river will open next year.

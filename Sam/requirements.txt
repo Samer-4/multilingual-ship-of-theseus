@@ -1,0 +1,9 @@
+# Stage 2 (CPU only). Metric libraries pinned to the versions the MADLAD worker used.
+numpy==1.26.4
+pandas==2.2.3
+pyarrow==17.0.0
+pyyaml==6.0.2
+pytest==8.3.3
+sacrebleu==2.5.1
+rouge-score==0.1.2
+scikit-learn==1.5.2

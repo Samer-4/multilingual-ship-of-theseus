@@ -1,0 +1,9 @@
+{
+ "kernel": "samahmed17/sam-sot-mt-qwen3-4b-preflight",
+ "version": 1,
+ "pushed_at": "2026-10-31T12:37:05Z",
+ "code_digest": "0446fbe11f388a36",
+ "code_dataset_version": 10,
+ "notebook_sha256": "836a3ba6800729c611904ec128addd89fea37781523d15699971710700c2c0e9",
+ "code_uploaded": true
+}

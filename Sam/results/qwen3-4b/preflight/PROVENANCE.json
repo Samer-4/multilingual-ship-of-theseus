@@ -1,0 +1,42 @@
+{
+ "raw_download": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/results/qwen3-4b/preflight/raw/sam-sot-mt-qwen3-4b-preflight_v1_20261031T130722Z",
+ "export_dir": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/results/qwen3-4b/preflight/raw/sam-sot-mt-qwen3-4b-preflight_v1_20261031T130722Z/sam_outputs/export/qwen3-4b__free",
+ "download": {
+  "kernel": "samahmed17/sam-sot-mt-qwen3-4b-preflight",
+  "version": 1,
+  "status_at_download": "COMPLETE",
+  "downloaded_at": "20261031T130728Z",
+  "files": {
+   "sam-sot-mt-qwen3-4b-preflight.log": "06d71a0031bc9e0cca827f7c04a11e73444ddaefa5281657210f2e754caade13",
+   "sam_outputs/export/qwen3-4b__free/RESUME.json": "32394a1b0cbd6b74706931ecee3909e2ff0e14997e3c3f50b91acee878d28237",
+   "sam_outputs/export/qwen3-4b__free/attrition.csv": "b8ecec016470678564d7ebe87cce1304319535734a71c7081d39d45b4fc2f67b",
+   "sam_outputs/export/qwen3-4b__free/generations_delta.parquet": "60621a5b802e63b2ed467e6c859f53d205160cac38cbb48e7a3d87c9ee7e4d54",
+   "sam_outputs/export/qwen3-4b__free/generations_merged.parquet": "9a72c9c7db2b4864ea512c1d5be3d5955afacf0e8ef36756f699156e7629bad6",
+   "sam_outputs/export/qwen3-4b__free/gpu_memory.json": "154aa87074352ce2260fda9d96eac4ad8dc2a089b2015328208be765c4d91e43",
+   "sam_outputs/export/qwen3-4b__free/new_translations.csv": "267b01f0661398a91557af35f6b04877b512bc1fb02bce725e4d10a1f2a21746",
+   "sam_outputs/export/qwen3-4b__free/runs.parquet": "d2e51501f0da9b14d1f1435562a51e3cca3aa0636cf3a824e127c2f6c223c20e",
+   "sam_outputs/export/qwen3-4b__free/sanity_probe.csv": "19c31a1d4a66d3838c894fe514f5aabc1a5bdeb1f5b0324aa43bd4025e760849",
+   "sam_outputs/export/qwen3-4b__free/validation_report.csv": "d9b7809ba7b29e63d9af8684eb06edf523a0924f847fb96cbdd3a5a8503e320d",
+   "sam_outputs/export/qwen3-4b__free.zip": "18dea87312510ff72a66961d76bb5236cf0bc3d953f91d59f9cf5ba9efc7c1f1",
+   "sam_outputs/runs/qwen3-4b__free/generations_delta.parquet": "60621a5b802e63b2ed467e6c859f53d205160cac38cbb48e7a3d87c9ee7e4d54",
+   "sam_outputs/runs/qwen3-4b__free/runs.parquet": "d2e51501f0da9b14d1f1435562a51e3cca3aa0636cf3a824e127c2f6c223c20e"
+  }
+ },
+ "organized_at": "20261031T130728Z",
+ "resume_files": {
+  "attrition.csv": "b8ecec016470678564d7ebe87cce1304319535734a71c7081d39d45b4fc2f67b",
+  "generations_delta.parquet": "60621a5b802e63b2ed467e6c859f53d205160cac38cbb48e7a3d87c9ee7e4d54",
+  "generations_merged.parquet": "9a72c9c7db2b4864ea512c1d5be3d5955afacf0e8ef36756f699156e7629bad6",
+  "gpu_memory.json": "154aa87074352ce2260fda9d96eac4ad8dc2a089b2015328208be765c4d91e43",
+  "new_translations.csv": "267b01f0661398a91557af35f6b04877b512bc1fb02bce725e4d10a1f2a21746",
+  "runs.parquet": "d2e51501f0da9b14d1f1435562a51e3cca3aa0636cf3a824e127c2f6c223c20e",
+  "sanity_probe.csv": "19c31a1d4a66d3838c894fe514f5aabc1a5bdeb1f5b0324aa43bd4025e760849",
+  "validation_report.csv": "d9b7809ba7b29e63d9af8684eb06edf523a0924f847fb96cbdd3a5a8503e320d"
+ },
+ "merged_records": 418,
+ "new_records": 18,
+ "stage2_records_verified": 400,
+ "superseded": [],
+ "progress_events": 82,
+ "malformed_progress_lines": 0
+}

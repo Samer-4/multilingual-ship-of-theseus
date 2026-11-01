@@ -1,0 +1,7 @@
+experiment_id,translator,prompt_variant,item_id,output_stage,validation_status,validation_reason,validation_warnings
+msot_xsum_madlad200,madlad-3b,mt-default,xsum|BigScience|xsum-4713,S1,invalid,legacy:generation_cap;legacy:direction_unattributed;check:repetition,check:length_ratio=1.86;check:possible_truncation
+msot_xsum_madlad200,madlad-3b,mt-default,xsum|BigScience|xsum-4713,T1,invalid,legacy:generation_cap;legacy:direction_unattributed;check:repetition,
+msot_xsum_madlad200,madlad-3b,mt-default,xsum|LLAMA|xsum-4714,S1,invalid,legacy:generation_cap;legacy:severe_expansion;legacy:direction_unattributed,
+msot_xsum_madlad200,madlad-3b,mt-default,xsum|LLAMA|xsum-4714,T1,invalid,legacy:generation_cap;legacy:severe_expansion;legacy:direction_unattributed;check:repetition,check:length_ratio=2.96;check:possible_truncation
+msot_xsum_madlad200,madlad-3b,mt-default,xsum|LLAMA|xsum-4733,S1,invalid,legacy:generation_cap;legacy:direction_unattributed,
+msot_xsum_madlad200,madlad-3b,mt-default,xsum|LLAMA|xsum-4733,T1,invalid,legacy:generation_cap;legacy:direction_unattributed;check:repetition,

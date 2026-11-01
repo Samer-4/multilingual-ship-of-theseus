@@ -1,0 +1,157 @@
+# One entry per translator pathway. A pathway = (translator, prompt_variant); pathways never share records.
+# `verified: true` only for settings read from code that actually produced outputs in this repo.
+# generation_config_id = sha256 of the canonical JSON of (translator, prompt_variant, model_checkpoint,
+# prompt, settings), first 12 hex. Every record in a pathway must carry the same id (schema.chain_violations).
+#
+# FROZEN: the madlad-3b entry produced the 400 Stage 2 records (generation_config_id 705a8bd4992e). Editing
+# ANY value in it, or adding a key, changes that id and blocks the S2-T3 continuation. Its `libraries` and
+# `hardware` describe the round-1 run; the runtime actually used by every new run (GPU, torch, transformers)
+# is recorded separately in runs.parquet, with a warning when it differs.
+#
+# Keys read by the adapters (src/sot_mt/translators.py): settings.dtype, settings.decoding,
+# settings.batch_size, the token budget (chunking.token_budget or segmentation.token_budget), max_model_len,
+# lang_codes; requires_hf_token; import_only.
+
+translators:
+  madlad-3b:
+    model_checkpoint: google/madlad400-3b-mt
+    model_revision: null                 # not recorded by the legacy run
+    family: mt
+    verified: true                       # from experiments/madlad_translation/madlad_explorer.ipynb (worker, cell 5)
+    prompt_variants:
+      mt-default:
+        prompt: null                     # target selected by a "<2es>" / "<2en>" prefix token
+    settings:
+      dtype: float16
+      decoding: {num_beams: 1, do_sample: false, max_new_tokens: 512}
+      chunking: {splitter: "regex (?<=[.!?])\\s+", token_budget: 300, budget_includes_lang_prefix: true}
+      batch_size: 4
+      libraries: {transformers: 4.46.3, accelerate: 1.2.1, sentencepiece: 0.2.0}
+      hardware: Tesla V100 32GB (Northeastern Explorer)
+
+  qwen3-4b:                              # NEW runs (Stage 3): Hugging Face transformers, not vLLM
+    model_checkpoint: Qwen/Qwen3-4B-Instruct-2507
+    model_revision: null
+    family: llm
+    verified: false                      # prompts copied verbatim from the legacy notebook; engine is new
+    prompt_variants:
+      free:                              # PRIMARY comparison (Stage 2 decision 1)
+        system_en_es: "Translate the following English text into Spanish naturally and idiomatically, as a skilled professional translator would for a Spanish-speaking readership. Output only the Spanish text, with no notes, quotes, or explanations."
+        system_es_en: "Translate the following Spanish text into English. Output only the translation, with no notes."
+      literal:                           # kept as a separate experiment
+        system_en_es: "Translate the following English text into Spanish word-for-word. Preserve the source word order, sentence boundaries and structure as closely as Spanish grammar allows. Do not rephrase, merge, split, or reorder anything. Output only the Spanish text, with no notes, quotes, or explanations."
+        system_es_en: "Translate the following Spanish text into English. Output only the translation, with no notes."
+    settings:
+      engine: transformers
+      dtype: float16                     # T4 has no bf16
+      decoding: {do_sample: false, max_new_tokens: "max(16, min(2*n_in + 64, max_model_len - n_prompt - 8))"}
+      max_model_len: 8192
+      segmentation: {method: none}
+      batch_size: 1                      # one document per generate call: no padding effects on greedy output
+      postprocess: strip <think>...</think>
+
+  qwen3-4b-vllm-legacy:                  # IMPORT ONLY: the Colab run in degree_zero_chain.ipynb (texts on Drive)
+    model_checkpoint: Qwen/Qwen3-4B-Instruct-2507
+    model_revision: null
+    family: llm
+    verified: true                       # from experiments/qwen_translation/degree_zero_chain.ipynb
+    import_only: true                    # no vLLM adapter: this pathway cannot be continued by the runner
+    prompt_variants:
+      free:                              # PRIMARY comparison (Stage 2 decision 1)
+        system_en_es: "Translate the following English text into Spanish naturally and idiomatically, as a skilled professional translator would for a Spanish-speaking readership. Output only the Spanish text, with no notes, quotes, or explanations."
+        system_es_en: "Translate the following Spanish text into English. Output only the translation, with no notes."
+      literal:                           # kept as a separate experiment
+        system_en_es: "Translate the following English text into Spanish word-for-word. Preserve the source word order, sentence boundaries and structure as closely as Spanish grammar allows. Do not rephrase, merge, split, or reorder anything. Output only the Spanish text, with no notes, quotes, or explanations."
+        system_es_en: "Translate the following Spanish text into English. Output only the translation, with no notes."
+    settings:
+      engine: vllm                       # legacy Colab engine; new runs use qwen3-4b (transformers) instead
+      dtype: half
+      decoding: {temperature: 0, max_tokens: "max(16, min(2*n_in + 64, 8192 - n_prompt - 8))", seed: 0}
+      max_model_len: 8192
+      chunking: none
+      postprocess: strip <think>...</think>
+
+  nllb:
+    model_checkpoint: facebook/nllb-200-distilled-1.3B   # PROVISIONAL (Stage 2 decision 2)
+    model_revision: null
+    family: mt
+    verified: false
+    prompt_variants:
+      mt-default: {prompt: null}         # target chosen by forced_bos_token_id = the target language code
+    settings:
+      dtype: float16
+      lang_codes: {en: eng_Latn, es: spa_Latn}
+      decoding: {num_beams: 1, do_sample: false, max_new_tokens: 512}
+      segmentation: {method: sentence, splitter: "regex (?<=[.!?])\\s+ (same as MADLAD)", token_budget: 256}
+      batch_size: 8                      # segments per generate call; halved automatically on CUDA OOM
+
+  llama:
+    model_checkpoint: meta-llama/Llama-3.2-3B-Instruct  # PROVISIONAL (Stage 2 decision 3); gated, access unverified
+    model_revision: null
+    family: llm
+    verified: false
+    # Weights: Meta's own Transformers upload on Kaggle Models (metaresearch/llama-3.2, variation 3b-instruct,
+    # version 1), attached to the kernel through model_sources, so no Hugging Face token or Kaggle Secret is
+    # needed. It is the same model as the hub id above, served from a different host; load_report records a
+    # fingerprint of the folder actually loaded. Access needs the Llama 3.2 licence accepted on Kaggle (as of
+    # 2026-10-31 the CLI gets 403 on its files for this account). The hub route instead needs
+    # requires_hf_token: true, an approved meta-llama access request and an HF_TOKEN Kaggle Secret.
+    requires_hf_token: false
+    prompt_variants:
+      free:                              # same wording as qwen3-4b/free for parity
+        system_en_es: "Translate the following English text into Spanish naturally and idiomatically, as a skilled professional translator would for a Spanish-speaking readership. Output only the Spanish text, with no notes, quotes, or explanations."
+        system_es_en: "Translate the following Spanish text into English. Output only the translation, with no notes."
+    settings:
+      engine: transformers
+      dtype: float16
+      decoding: {do_sample: false, max_new_tokens: "max(16, min(2*n_in + 64, max_model_len - n_prompt - 8))"}
+      max_model_len: 8192                # same cap as Qwen for parity (the model itself allows more)
+      segmentation: {method: none}
+      batch_size: 1
+      postprocess: strip <think>...</think>
+      weights: {source: kaggle_models, handle: metaresearch/llama-3.2/transformers/3b-instruct/1}
+      # the Llama 3.x chat template writes "Today Date: <today>" into the system header unless date_string is
+      # given: fixed to the template's own fallback so every session (and every resume) sees the same prompt
+      chat_template_kwargs: {date_string: "26 Jul 2024"}
+
+  phi4-mini:                             # fourth translator, replacing llama (Kaggle no longer takes Llama 3.2
+                                         # access requests, 2026-10-31); llama's entry is kept unchanged
+    model_checkpoint: microsoft/Phi-4-mini-instruct
+    # hub commit as of 2026-10-31 (public, MIT, not gated; huggingface.co/api/models). Native transformers
+    # Phi3ForCausalLM (no remote code); bf16 checkpoint, run in fp16 on T4 like Qwen; vocab 200064; LongRoPE,
+    # whose long factors only apply beyond 4096 tokens (prompt + output; the preflight records both)
+    model_revision: cfbefacb99257ffa30c83adab238a50856ac3083
+    family: llm
+    verified: false
+    prompt_variants:
+      free:                              # same wording as qwen3-4b/free for parity
+        system_en_es: "Translate the following English text into Spanish naturally and idiomatically, as a skilled professional translator would for a Spanish-speaking readership. Output only the Spanish text, with no notes, quotes, or explanations."
+        system_es_en: "Translate the following Spanish text into English. Output only the translation, with no notes."
+    settings:
+      engine: transformers
+      dtype: float16                     # T4 has no bf16
+      decoding: {do_sample: false, max_new_tokens: "max(16, min(2*n_in + 64, max_model_len - n_prompt - 8))"}
+      max_model_len: 8192                # same cap as Qwen for parity
+      segmentation: {method: none}
+      batch_size: 1
+      postprocess: strip <think>...</think>
+
+# Inference-runtime corrections, kept OUTSIDE the frozen translator entries so the generation_config_id of
+# every pathway is unchanged. They describe how a model must be wired when the installed library builds it
+# differently from the run that produced the pathway's existing records; the adapter applies them at load
+# time, checks the result, and records the patch in runs.parquet (load_report) and in every new record's
+# generation_meta (runtime_patch).
+runtime_patches:
+  madlad-3b:
+    patch_id: madlad-embed-decoder-v1
+    # transformers >= 5 builds T5's encoder/decoder input embeddings and `shared` as separate modules and
+    # does not tie decoder.embed_tokens (the checkpoint stores a different tensor there). Round 1
+    # (transformers 4.46.3) used one input-embedding module. Measured on Kaggle (kernel
+    # samahmed17/sam-sot-mt-madlad-verify1 v1, transformers 5.16.1, T4, fp16; item xsum|LLAMA|xsum-4729):
+    #   as loaded          -> degenerate (repeated token, no EOS)
+    #   all = shared       -> EOS, but garbage (word similarity 0.0 to round-1 S1)
+    #   all = decoder      -> IDENTICAL to round-1 S1
+    # lm_head stays as loaded (equal to the checkpoint's shared.weight) in all three.
+    embedding_tie: decoder          # encoder, decoder and `shared` all use the checkpoint's decoder.embed_tokens
+    lm_head: unchanged
+    applies_when: input embeddings are not one module after loading (no-op under transformers 4.46.3)

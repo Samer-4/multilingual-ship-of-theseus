@@ -1,0 +1,2 @@
+item_id,article_id,source_label,t1_words,t1_quantile_target,length_band,t0_words,round1_segments_en_es,round1_segments_es_en,purpose
+xsum|LLAMA|xsum-4729,xsum-4729,LLAMA,169,0.5,medium,204,2,2,one-document real-model verification (2 segments per direction)

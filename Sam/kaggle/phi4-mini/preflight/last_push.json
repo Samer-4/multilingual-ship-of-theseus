@@ -1,0 +1,9 @@
+{
+ "kernel": "samahmed17/sam-sot-mt-phi4-mini-preflight",
+ "version": 1,
+ "pushed_at": "2026-10-31T14:24:19Z",
+ "code_digest": "a52415429f678157",
+ "code_dataset_version": 11,
+ "notebook_sha256": "3a3191c2832c885b2013c77d37ce4aedee1981d3c6e861897c180daa77dda85a",
+ "code_uploaded": false
+}

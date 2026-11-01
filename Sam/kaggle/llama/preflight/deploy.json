@@ -1,0 +1,40 @@
+{
+ "prepared_at": "2026-10-31T12:05:03Z",
+ "kernel": "samahmed17/sam-sot-mt-llama-preflight",
+ "accelerator": "NvidiaTeslaT4",
+ "timeout_s": 5400,
+ "code_digest": "343ed83a11088085",
+ "code_dataset": "samahmed17/sam-sot-mt-code",
+ "staged_dataset": "samahmed17/sam-sot-mt-staged",
+ "code_build_dir": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/build/kaggle/sam-sot-mt-code",
+ "notebook_sha256": "af7fd977bf43e9b00108878b28f6d9cfc3058db28027ab9076d3c74b360b68a5",
+ "overrides": {
+  "PROMPT_VARIANT": "None",
+  "ROUNDS": "(1, 3)",
+  "MOCK": "False",
+  "ALLOW_MODEL_DOWNLOAD": "True",
+  "USE_HF_TOKEN": "False",
+  "CHECK_TOKENIZER_PARITY": "False",
+  "DRIFT_PROBE": "False",
+  "MADLAD_DIAGNOSTIC": "False",
+  "SANITY_PROBE": "True",
+  "PREVIOUS_EXPORTS": "\"auto\"",
+  "CODE_DATASET": "\"sam-sot-mt-code\"",
+  "STAGED_DATASET": "\"sam-sot-mt-staged\"",
+  "CHECKPOINT_EVERY": "5",
+  "TRANSLATOR": "\"llama\"",
+  "ITEM_IDS_FILE": "\"data/manifests/preflight3.csv\"",
+  "MAX_ITEMS": "None",
+  "TIME_LIMIT_MINUTES": "60",
+  "EXPORT_EVERY": "6",
+  "EXPECTED_WEIGHTS_ID": "None"
+ },
+ "kernel_sources": [],
+ "translator": "llama",
+ "cli_slug_check": "sam-sot-mt-llama-preflight",
+ "results_dir": "results/llama/preflight",
+ "generated_root": "data/generated/llama/preflight",
+ "model_sources": [
+  "metaresearch/llama-3.2/transformers/3b-instruct/1"
+ ]
+}

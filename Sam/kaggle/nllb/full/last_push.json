@@ -1,0 +1,9 @@
+{
+ "kernel": "samahmed17/sam-sot-mt-nllb-full",
+ "version": 1,
+ "pushed_at": "2026-10-31T13:34:41Z",
+ "code_digest": "a52415429f678157",
+ "code_dataset_version": 11,
+ "notebook_sha256": "d6899eb8e4c835edd405007d8b777b054c4444612ca418674e2a7957712b1f30",
+ "code_uploaded": true
+}

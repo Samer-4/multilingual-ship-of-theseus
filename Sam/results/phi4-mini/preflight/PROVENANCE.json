@@ -1,0 +1,42 @@
+{
+ "raw_download": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/results/phi4-mini/preflight/raw/sam-sot-mt-phi4-mini-preflight_v1_20261031T143628Z",
+ "export_dir": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/results/phi4-mini/preflight/raw/sam-sot-mt-phi4-mini-preflight_v1_20261031T143628Z/sam_outputs/export/phi4-mini__free",
+ "download": {
+  "kernel": "samahmed17/sam-sot-mt-phi4-mini-preflight",
+  "version": 1,
+  "status_at_download": "COMPLETE",
+  "downloaded_at": "20261031T143634Z",
+  "files": {
+   "sam-sot-mt-phi4-mini-preflight.log": "1d18f752774317ec51406d387e723211d9ffc96a13ec835f56534a70d6285543",
+   "sam_outputs/export/phi4-mini__free/RESUME.json": "432aaeaaf46e57413d4cb63dcc4156b2b00a07d13a6e7d3b4ae066c687ea7d3e",
+   "sam_outputs/export/phi4-mini__free/attrition.csv": "dcf2a910e292c5b5033973f80fb44cb26ee38c875bb2e2ee4b7c1954b102e217",
+   "sam_outputs/export/phi4-mini__free/generations_delta.parquet": "09e6d99c98682d42ba70331a218a64dfb0e5705b6b520834e92f02772e3a939a",
+   "sam_outputs/export/phi4-mini__free/generations_merged.parquet": "00547365bf35b59937566a44869e84541015b52603644372b36e8b84effa6a02",
+   "sam_outputs/export/phi4-mini__free/gpu_memory.json": "7f853a1c7146a93d3f67c3573d06d12818a4dc3eb05f8547acf64a7f2c7f8462",
+   "sam_outputs/export/phi4-mini__free/new_translations.csv": "8f0ee9c7c2a86c1dad2055d22caeb5baf60303c98734f88d0d45332fada0dee9",
+   "sam_outputs/export/phi4-mini__free/runs.parquet": "dcaceb72fbf4883c9fb9e13bc25fefc39411ee0de66625e08774f9d987e622d3",
+   "sam_outputs/export/phi4-mini__free/sanity_probe.csv": "7ba9caee95698581440c3885edfc2ca670b019cb30b127315a31a65e41b67bba",
+   "sam_outputs/export/phi4-mini__free/validation_report.csv": "81e5c376987a5d521a8055c4cd1d479c1338bd9cec2a2c82419082e595db5d1b",
+   "sam_outputs/export/phi4-mini__free.zip": "6a52937768132bfc64c0d545d07adb446e78a7624ef842c7ec23d0df0164d2ec",
+   "sam_outputs/runs/phi4-mini__free/generations_delta.parquet": "09e6d99c98682d42ba70331a218a64dfb0e5705b6b520834e92f02772e3a939a",
+   "sam_outputs/runs/phi4-mini__free/runs.parquet": "dcaceb72fbf4883c9fb9e13bc25fefc39411ee0de66625e08774f9d987e622d3"
+  }
+ },
+ "organized_at": "20261031T143635Z",
+ "resume_files": {
+  "attrition.csv": "dcf2a910e292c5b5033973f80fb44cb26ee38c875bb2e2ee4b7c1954b102e217",
+  "generations_delta.parquet": "09e6d99c98682d42ba70331a218a64dfb0e5705b6b520834e92f02772e3a939a",
+  "generations_merged.parquet": "00547365bf35b59937566a44869e84541015b52603644372b36e8b84effa6a02",
+  "gpu_memory.json": "7f853a1c7146a93d3f67c3573d06d12818a4dc3eb05f8547acf64a7f2c7f8462",
+  "new_translations.csv": "8f0ee9c7c2a86c1dad2055d22caeb5baf60303c98734f88d0d45332fada0dee9",
+  "runs.parquet": "dcaceb72fbf4883c9fb9e13bc25fefc39411ee0de66625e08774f9d987e622d3",
+  "sanity_probe.csv": "7ba9caee95698581440c3885edfc2ca670b019cb30b127315a31a65e41b67bba",
+  "validation_report.csv": "81e5c376987a5d521a8055c4cd1d479c1338bd9cec2a2c82419082e595db5d1b"
+ },
+ "merged_records": 418,
+ "new_records": 18,
+ "stage2_records_verified": 400,
+ "superseded": [],
+ "progress_events": 73,
+ "malformed_progress_lines": 0
+}

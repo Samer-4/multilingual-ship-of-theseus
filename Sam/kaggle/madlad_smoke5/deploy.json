@@ -1,0 +1,37 @@
+{
+ "prepared_at": "2026-10-31T07:05:34Z",
+ "kernel": "samahmed17/sam-sot-mt-madlad-smoke5",
+ "accelerator": "NvidiaTeslaT4",
+ "timeout_s": 5400,
+ "code_digest": "70a358ca0871bb87",
+ "code_dataset": "samahmed17/sam-sot-mt-code",
+ "staged_dataset": "samahmed17/sam-sot-mt-staged",
+ "code_build_dir": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/build/kaggle/sam-sot-mt-code",
+ "notebook_sha256": "c5da9b66a7f0f79e0c228f0ed660af1bb75be6ab5bba1700219db82085ccbc48",
+ "overrides": {
+  "TRANSLATOR": "\"madlad-3b\"",
+  "PROMPT_VARIANT": "None",
+  "ITEM_IDS_FILE": "\"data/manifests/stage3b_madlad_smoke5.csv\"",
+  "MAX_ITEMS": "5",
+  "ROUNDS": "(1, 3)",
+  "MOCK": "False",
+  "ALLOW_MODEL_DOWNLOAD": "True",
+  "USE_HF_TOKEN": "False",
+  "CHECK_TOKENIZER_PARITY": "True",
+  "DRIFT_PROBE": "True",
+  "TIME_LIMIT_MINUTES": "60",
+  "PREVIOUS_EXPORTS": "\"auto\"",
+  "CODE_DATASET": "\"sam-sot-mt-code\"",
+  "STAGED_DATASET": "\"sam-sot-mt-staged\"",
+  "MADLAD_DIAGNOSTIC": "False",
+  "REFERENCE_GATE": "True",
+  "EXPECTED_PREVIOUS_MERGED_SHA256": "[\"40e6bd702bcaf3f18fb525fe9ce0bb97fad81b2be7593f879ed49dacb67ddbde\"]"
+ },
+ "kernel_sources": [
+  "samahmed17/sam-sot-mt-madlad-verify1"
+ ],
+ "translator": "madlad-3b",
+ "cli_slug_check": "sam-sot-mt-madlad-smoke5",
+ "results_dir": "results/madlad_smoke5_v2",
+ "generated_root": "data/generated/smoke5_v2"
+}

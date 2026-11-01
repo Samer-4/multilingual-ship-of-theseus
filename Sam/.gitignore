@@ -1,0 +1,37 @@
+# Local environment
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Corpus copy (upstream repo has no licence file): never commit by default
+data/raw/
+
+# Text-bearing tables (contain corpus-derived text). Upload to a PRIVATE Kaggle dataset instead.
+# Remove these lines only after the team confirms the repository's visibility and licence position.
+data/staged/
+reports/stage2/metric_regression_per_item.csv
+
+# Metric/embedding caches
+data/cache/
+
+# Stage 3 run outputs (contain generated text), mock dry runs, Kaggle upload folders
+runs/
+runs_mock/
+build/
+
+# Kaggle downloads (scripts/download_kaggle_outputs.py): generation tables and anything with generated text.
+# Text-free reports (validation_report.csv, attrition.csv, tokenizer_parity.csv, summary.md,
+# progress_events.jsonl, PROVENANCE.json) stay committable.
+data/generated/
+results/**/raw/
+results/**/superseded/
+results/**/new_translations.csv
+results/**/drift_probe.csv
+results/**/*.zip
+results/**/*.log
+results/**/madlad_diagnostic.json
+
+# Research layer: local text-bearing tables, caches and logs (results/research/ holds the text-free outputs)
+.venv-research/
+data/research/

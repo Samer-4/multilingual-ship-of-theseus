@@ -1,0 +1,6 @@
+item_id,article_id,source_label,output_stage,validation_status,validation_reason,validation_warnings,input_words,output_words,length_ratio,finish,n_segments,segment_hit_eos,oom_retries,seconds,run_id
+xsum|OpenAI|xsum-4710,xsum-4710,OpenAI,S2,invalid,engine:generation_cap;check:repetition,check:length_ratio=0.58;check:possible_truncation,50,29,0.58,length,1,[False],0,27.24,madlad-3b-mt-default-2026-10-31T052125Z-fca149
+xsum|Tsinghua|xsum-4719,xsum-4719,Tsinghua,S2,invalid,engine:generation_cap;check:repetition,check:length_ratio=2.46;check:possible_truncation,104,256,2.462,length,1,[False],0,27.24,madlad-3b-mt-default-2026-10-31T052125Z-fca149
+xsum|BigScience|xsum-4720,xsum-4720,BigScience,S2,invalid,engine:generation_cap;check:repetition,check:possible_truncation,558,513,0.919,length,3,"[False, False, False]",0,29.49,madlad-3b-mt-default-2026-10-31T052125Z-fca149
+xsum|Human|xsum-4721,xsum-4721,Human,S2,invalid,engine:generation_cap;check:repetition,check:possible_truncation,339,257,0.758,length,2,"[False, False]",0,29.46,madlad-3b-mt-default-2026-10-31T052125Z-fca149
+xsum|LLAMA|xsum-4729,xsum-4729,LLAMA,S2,invalid,engine:generation_cap;check:repetition,check:possible_truncation,169,256,1.515,length,1,[False],0,27.63,madlad-3b-mt-default-2026-10-31T052125Z-fca149

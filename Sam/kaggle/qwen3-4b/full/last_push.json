@@ -1,0 +1,9 @@
+{
+ "kernel": "samahmed17/sam-sot-mt-qwen3-4b-full",
+ "version": 1,
+ "pushed_at": "2026-10-31T14:36:39Z",
+ "code_digest": "a52415429f678157",
+ "code_dataset_version": 11,
+ "notebook_sha256": "ce23f7cfc6e5241d17f3efb9dadb7f2521395551184ec3533d2a9313207a5215",
+ "code_uploaded": false
+}

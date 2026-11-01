@@ -1,0 +1,26 @@
+# Research layer (RQ1-RQ3) settings. Translators are discovered from data/generated/*_final/; this file only
+# gives optional display names and a preferred plotting order. A translator missing here is still analysed
+# (displayed by its id, ordered after the listed ones).
+display_names:
+  madlad-3b: MADLAD-400-3B
+  nllb: NLLB-200-1.3B
+  qwen3-4b: Qwen3-4B
+  phi4-mini: Phi-4-mini
+  llama: Llama-3.2-3B
+
+# Seeds and resampling (every random choice in the research layer reads these)
+seed: 6120
+bootstrap_samples: 2000          # article-cluster bootstrap for confidence intervals
+cv_folds: 5                      # grouped folds over ORIGINAL ARTICLE IDs
+cv_repeats: 5                    # different article-to-fold shufflings
+
+# Neural metric models (revisions are resolved from the local Hugging Face snapshot and recorded)
+neural:
+  e5: {model: intfloat/e5-base-v2, prefix: "query: ", max_tokens: 512}
+  mpnet: {model: sentence-transformers/all-mpnet-base-v2, max_tokens: 384}
+  bertscore: {model: FacebookAI/roberta-large, layer: 17, window: 510, step: 384, idf: false}
+
+# Heuristic information-preservation thresholds (warnings, NOT validated factual errors)
+sentence_coverage_threshold: 0.6   # an original sentence counts as covered when its best MPNet match >= this
+burrows_mfw: 150                   # most frequent words of the T0 corpus used for Burrows' Delta
+function_words: 100                # most frequent English stop words of the T0 corpus

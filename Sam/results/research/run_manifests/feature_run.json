@@ -1,0 +1,138 @@
+{
+ "started": "2026-11-01T01:36:32.361971+00:00",
+ "corpus": {
+  "items": 200,
+  "articles": 31,
+  "source_labels": [
+   "BigScience",
+   "Eleuther-AI",
+   "Human",
+   "LLAMA",
+   "OpenAI",
+   "PaLM",
+   "Tsinghua"
+  ],
+  "translators": [
+   "madlad-3b",
+   "nllb",
+   "qwen3-4b"
+  ],
+  "matched_items": 193,
+  "complete_chains": {
+   "madlad-3b": 196,
+   "nllb": 197,
+   "qwen3-4b": 200
+  },
+  "texts_parquet_sha256": "2a02e644b4d6999d14abfb00b80dcf3d8ac0df0a3ce04fac5ef0997cbf5bacfa",
+  "lineage": {
+   "valid_records_checked": 3570,
+   "failures": [],
+   "generation_config_ids": {
+    "madlad-3b": [
+     "705a8bd4992e"
+    ],
+    "nllb": [
+     "c63f99caa212"
+    ],
+    "qwen3-4b": [
+     "747d97077f38"
+    ]
+   }
+  }
+ },
+ "fingerprints": {
+  "text_features": "1e528ab1e0f1",
+  "pair_cpu": "f16680569724"
+ },
+ "python": "3.12.15",
+ "platform": "macOS-14.3-arm64-arm-64bit",
+ "libraries": {
+  "numpy": "1.26.4",
+  "pandas": "2.2.3",
+  "sacrebleu": "2.5.1",
+  "rouge_score": null,
+  "sklearn": "1.5.2",
+  "spacy": "3.8.18",
+  "torch": "2.15.0",
+  "transformers": "5.22.1",
+  "bert_score": "0.3.12"
+ },
+ "neural": {
+  "e5": {
+   "repo": "intfloat/e5-base-v2",
+   "revision": "f52bf8ec8c7124536f0efb74aca902b2995e5bcd",
+   "fingerprint": "c11ae77c56fa",
+   "device": "cpu",
+   "texts_chunked_this_run": 294
+  },
+  "mpnet": {
+   "repo": "sentence-transformers/all-mpnet-base-v2",
+   "revision": "e8c3b32edf5434bc2275fc9bab85f82640a19130",
+   "fingerprint": "31a0b834fe49",
+   "device": "cpu",
+   "texts_chunked_this_run": 551
+  },
+  "bertscore": {
+   "repo": "FacebookAI/roberta-large",
+   "revision": "722cf37b1afa9454edce342e7895e588b6ff1d59",
+   "fingerprint": "b84eaa6e7eb4",
+   "device": "cpu",
+   "layer": 17,
+   "baseline": {
+    "P": 0.83150584,
+    "R": 0.8314941,
+    "F": 0.83122575
+   },
+   "bert_score": "0.3.12",
+   "windowed_texts_this_run": 281
+  },
+  "sentence_coverage_threshold": 0.6,
+  "unique_sentences": 11358
+ },
+ "pairs": 3934,
+ "unique_pairs": 2975,
+ "pairs_by_kind": [
+  {
+   "translator": "baseline",
+   "kind": "cross_source",
+   "n": 168
+  },
+  {
+   "translator": "baseline",
+   "kind": "unrelated",
+   "n": 200
+  },
+  {
+   "translator": "madlad-3b",
+   "kind": "cumulative",
+   "n": 589
+  },
+  {
+   "translator": "madlad-3b",
+   "kind": "step",
+   "n": 589
+  },
+  {
+   "translator": "nllb",
+   "kind": "cumulative",
+   "n": 594
+  },
+  {
+   "translator": "nllb",
+   "kind": "step",
+   "n": 594
+  },
+  {
+   "translator": "qwen3-4b",
+   "kind": "cumulative",
+   "n": 600
+  },
+  {
+   "translator": "qwen3-4b",
+   "kind": "step",
+   "n": 600
+  }
+ ],
+ "seconds": 1684.6,
+ "finished": "2026-11-01T02:04:36.997680+00:00"
+}

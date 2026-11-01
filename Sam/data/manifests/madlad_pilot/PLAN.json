@@ -1,0 +1,184 @@
+{
+ "experiment_id": "msot_xsum_madlad200",
+ "translator": "madlad-3b",
+ "prompt_variant": "mt-default",
+ "generation_config_id": "705a8bd4992e",
+ "base": {
+  "staged_generations_sha256": "a636b3edc37b115ab1292881b930bc3531d2a3b8556cc84a4421d75a513a7ad9",
+  "export": "data/generated/smoke5_v2/xsum/madlad-3b",
+  "export_merged_sha256": "9e09f6b9fc54109cc10e2c99791f26c004c65dd94150bdb167cf7abfd3d6dec7",
+  "records": 420
+ },
+ "already_complete_items": [
+  "xsum|BigScience|xsum-4720",
+  "xsum|Human|xsum-4721",
+  "xsum|LLAMA|xsum-4729",
+  "xsum|OpenAI|xsum-4710",
+  "xsum|Tsinghua|xsum-4719"
+ ],
+ "remaining_items": 192,
+ "remaining_operations": 768,
+ "runtime_model": {
+  "a": -0.35,
+  "b": 0.0958,
+  "n": 20,
+  "mae_s": 1.29,
+  "source": "verify1 v2 + smoke5 v3 generation_meta.seconds"
+ },
+ "session_fixed_s": 100,
+ "probes_per_batch": 2,
+ "batches": [
+  {
+   "batch": "batch_01",
+   "items": 24,
+   "operations": 96,
+   "t1_words": 6054,
+   "source_labels": {
+    "BigScience": 4,
+    "Eleuther-AI": 4,
+    "Human": 4,
+    "LLAMA": 3,
+    "OpenAI": 3,
+    "PaLM": 3,
+    "Tsinghua": 3
+   },
+   "all_labels_present": true,
+   "est_translate_s": 1220,
+   "est_session_s": 1352,
+   "file": "batch_01.csv"
+  },
+  {
+   "batch": "batch_02",
+   "items": 22,
+   "operations": 88,
+   "t1_words": 5316,
+   "source_labels": {
+    "BigScience": 3,
+    "Eleuther-AI": 3,
+    "Human": 3,
+    "LLAMA": 4,
+    "OpenAI": 3,
+    "PaLM": 3,
+    "Tsinghua": 3
+   },
+   "all_labels_present": true,
+   "est_translate_s": 1043,
+   "est_session_s": 1174,
+   "file": "batch_02.csv"
+  },
+  {
+   "batch": "batch_03",
+   "items": 23,
+   "operations": 92,
+   "t1_words": 4602,
+   "source_labels": {
+    "BigScience": 3,
+    "Eleuther-AI": 4,
+    "Human": 3,
+    "LLAMA": 2,
+    "OpenAI": 3,
+    "PaLM": 4,
+    "Tsinghua": 4
+   },
+   "all_labels_present": true,
+   "est_translate_s": 1105,
+   "est_session_s": 1236,
+   "file": "batch_03.csv"
+  },
+  {
+   "batch": "batch_04",
+   "items": 30,
+   "operations": 120,
+   "t1_words": 5147,
+   "source_labels": {
+    "BigScience": 3,
+    "Eleuther-AI": 4,
+    "Human": 5,
+    "LLAMA": 5,
+    "OpenAI": 5,
+    "PaLM": 5,
+    "Tsinghua": 3
+   },
+   "all_labels_present": true,
+   "est_translate_s": 1141,
+   "est_session_s": 1268,
+   "file": "batch_04.csv"
+  },
+  {
+   "batch": "batch_05",
+   "items": 24,
+   "operations": 96,
+   "t1_words": 5097,
+   "source_labels": {
+    "BigScience": 4,
+    "Eleuther-AI": 4,
+    "Human": 3,
+    "LLAMA": 3,
+    "OpenAI": 3,
+    "PaLM": 3,
+    "Tsinghua": 4
+   },
+   "all_labels_present": true,
+   "est_translate_s": 1129,
+   "est_session_s": 1249,
+   "file": "batch_05.csv"
+  },
+  {
+   "batch": "batch_06",
+   "items": 25,
+   "operations": 100,
+   "t1_words": 5862,
+   "source_labels": {
+    "BigScience": 3,
+    "Eleuther-AI": 3,
+    "Human": 3,
+    "LLAMA": 4,
+    "OpenAI": 4,
+    "PaLM": 4,
+    "Tsinghua": 4
+   },
+   "all_labels_present": true,
+   "est_translate_s": 1102,
+   "est_session_s": 1216,
+   "file": "batch_06.csv"
+  },
+  {
+   "batch": "batch_07",
+   "items": 23,
+   "operations": 92,
+   "t1_words": 5588,
+   "source_labels": {
+    "BigScience": 4,
+    "Eleuther-AI": 4,
+    "Human": 4,
+    "LLAMA": 2,
+    "OpenAI": 3,
+    "PaLM": 3,
+    "Tsinghua": 3
+   },
+   "all_labels_present": true,
+   "est_translate_s": 1127,
+   "est_session_s": 1244,
+   "file": "batch_07.csv"
+  },
+  {
+   "batch": "batch_08",
+   "items": 21,
+   "operations": 84,
+   "t1_words": 5591,
+   "source_labels": {
+    "BigScience": 3,
+    "Eleuther-AI": 3,
+    "Human": 3,
+    "LLAMA": 3,
+    "OpenAI": 3,
+    "PaLM": 3,
+    "Tsinghua": 3
+   },
+   "all_labels_present": true,
+   "est_translate_s": 1082,
+   "est_session_s": 1206,
+   "file": "batch_08.csv"
+  }
+ ]
+}

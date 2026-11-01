@@ -1,0 +1,10 @@
+metric_id,target,n_recorded,n_compared,n_exact,max_abs_diff,recorded_median,recomputed_median,readme_median,readme_match_3dp,status
+madlad_v1.bleu,matched_item_metrics.csv per item,197,197,156.0,7.771561172376096e-16,0.603833824563914,0.603833824563914,0.604,True,pass
+madlad_v1.rougeL,matched_item_metrics.csv per item,197,197,197.0,0.0,0.8306878306878307,0.8306878306878307,0.831,True,pass
+madlad_v1.chrf,matched_item_metrics.csv per item,197,197,197.0,0.0,0.7934261469198235,0.7934261469198235,0.793,True,pass
+madlad_v1.word_retention,matched_item_metrics.csv per item,197,197,197.0,0.0,0.8364153627311522,0.8364153627311522,0.836,True,pass
+madlad_v1.function_word_cosine,matched_item_metrics.csv per item,197,197,197.0,0.0,0.9716160028034561,0.9716160028034561,0.972,True,pass
+madlad_v1.punctuation_f1,matched_item_metrics.csv per item,197,197,197.0,0.0,0.8526315789473684,0.8526315789473684,0.853,True,pass
+madlad_v1.exact_match,matched_item_metrics.csv per item,197,197,197.0,0.0,0.0,0.0,,,pass
+madlad_readme_only.e5_cosine_multilingual,README median,0,0,,,,,0.9818,,"pending: E5 cosine similarity (not the Qwen e5 distance); no code or per-item values in the repo, model weights not downloaded"
+madlad_readme_only.bertscore_f1,README median,0,0,,,,,0.9217,,"pending: BERTScore F1 (configuration unknown); no code or per-item values in the repo, model weights not downloaded"

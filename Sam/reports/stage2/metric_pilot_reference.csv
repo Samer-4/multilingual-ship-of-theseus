@@ -1,0 +1,6 @@
+metric_id,median,mean,n,note
+pilot.bleu,0.603833824563914,0.5900387073574086,197,pilot (baseline) definition; not a regression target for madlad_v1
+pilot.rouge1,0.8604651162790697,0.8436336893149571,197,pilot (baseline) definition; not a regression target for madlad_v1
+pilot.rouge2,0.7131147540983606,0.6951978356764127,197,pilot (baseline) definition; not a regression target for madlad_v1
+pilot.rougeL,0.8306878306878307,0.8117714766693567,197,pilot (baseline) definition; not a regression target for madlad_v1
+pilot.word_retention,0.7927927927927928,0.7797735603819059,197,pilot (baseline) definition; not a regression target for madlad_v1

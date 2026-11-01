@@ -1,0 +1,97 @@
+item_id,article_id,source_label,output_stage,validation_status,validation_reason,validation_warnings,input_words,output_words,length_ratio,finish,n_segments,segment_hit_eos,oom_retries,seconds,run_id
+xsum|BigScience|xsum-2638,xsum-2638,BigScience,S2,valid,,,83,94,1.133,stop,1,[True],0,6.84,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-2638,xsum-2638,Eleuther-AI,S2,valid,,,256,270,1.055,stop,2,"[True, True]",0,13.35,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-2638,xsum-2638,Human,S2,valid,,check:sentence_drop=27>26;check:number_change=lost:1991|24/added:,515,522,1.014,stop,3,"[True, True, True]",0,16.4,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-2638,xsum-2638,LLAMA,S2,valid,,,405,441,1.089,stop,3,"[True, True, True]",0,16.42,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-2638,xsum-2638,OpenAI,S2,valid,,,99,112,1.131,stop,1,[True],0,8.22,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-2638,xsum-2638,PaLM,S2,valid,,,381,404,1.06,stop,2,"[True, True]",0,16.28,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-2638,xsum-2638,Tsinghua,S2,valid,,,302,326,1.079,stop,2,"[True, True]",0,17.61,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-3981,xsum-3981,BigScience,S2,valid,,check:sentence_drop=12>8;check:number_change=lost:4/added:,288,240,0.833,stop,2,"[True, True]",0,12.57,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-3981,xsum-3981,Eleuther-AI,S2,valid,,,176,195,1.108,stop,1,[True],0,13.65,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-3981,xsum-3981,Human,S2,valid,,check:sentence_drop=30>21;check:number_change=lost:4/added:,444,453,1.02,stop,3,"[True, True, True]",0,15.95,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-3981,xsum-3981,LLAMA,S2,valid,,,305,306,1.003,stop,2,"[True, True]",0,15.58,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-3981,xsum-3981,OpenAI,S2,valid,,,106,117,1.104,stop,1,[True],0,8.09,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-4708,xsum-4708,PaLM,S2,valid,,,54,57,1.056,stop,1,[True],0,4.46,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-3981,xsum-3981,Tsinghua,S2,valid,,,397,405,1.02,stop,2,"[True, True]",0,17.04,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-4708,xsum-4708,BigScience,S2,valid,,,82,94,1.146,stop,1,[True],0,6.62,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-4708,xsum-4708,Eleuther-AI,S2,valid,,,129,145,1.124,stop,1,[True],0,10.4,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-4708,xsum-4708,Human,S2,valid,,,86,99,1.151,stop,1,[True],0,7.63,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-4708,xsum-4708,LLAMA,S2,valid,,,69,79,1.145,stop,1,[True],0,5.53,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-4708,xsum-4708,OpenAI,S2,valid,,,36,42,1.167,stop,1,[True],0,3.17,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-4709,xsum-4709,PaLM,S2,valid,,,411,453,1.102,stop,2,"[True, True]",0,18.24,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-4708,xsum-4708,Tsinghua,S2,valid,,,91,94,1.033,stop,1,[True],0,6.31,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-4709,xsum-4709,BigScience,S2,valid,,,281,344,1.224,stop,2,"[True, True]",0,15.56,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-4709,xsum-4709,Eleuther-AI,S2,valid,,,118,134,1.136,stop,1,[True],0,9.9,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-4709,xsum-4709,Human,S2,valid,,check:number_change=lost:486|75|76|8/added:180|48600|7500|76000,940,1098,1.168,stop,5,"[True, True, True, True, True]",0,31.62,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-2638,xsum-2638,BigScience,T2,valid,,,94,81,0.862,stop,1,[True],0,6.05,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-2638,xsum-2638,Eleuther-AI,T2,valid,,check:sentence_drop=9>4,270,245,0.907,stop,2,"[True, True]",0,11.92,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-2638,xsum-2638,Human,T2,valid,,check:entity_loss=july|needhams,522,481,0.921,stop,3,"[True, True, True]",0,14.83,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-2638,xsum-2638,LLAMA,T2,valid,,check:sentence_drop=17>16;check:entity_loss=detective,441,407,0.923,stop,3,"[True, True, True]",0,13.63,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-2638,xsum-2638,OpenAI,T2,valid,,check:roundtrip_unchanged,112,99,0.884,stop,1,[True],0,7.67,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-2638,xsum-2638,PaLM,T2,valid,,,404,382,0.946,stop,2,"[True, True]",0,15.93,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-2638,xsum-2638,Tsinghua,T2,valid,,,326,300,0.92,stop,2,"[True, True]",0,13.49,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-3981,xsum-3981,BigScience,T2,valid,,check:roundtrip_length_loss=0.77;check:entity_loss=bbc|farage|nigel|today,240,222,0.925,stop,2,"[True, True]",0,12.78,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-3981,xsum-3981,Eleuther-AI,T2,valid,,check:entity_loss=pmqs,195,176,0.903,stop,1,[True],0,11.85,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-3981,xsum-3981,Human,T2,valid,,check:entity_loss=bbc|radio|today,453,426,0.94,stop,3,"[True, True, True]",0,15.13,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-3981,xsum-3981,LLAMA,T2,valid,,,306,302,0.987,stop,2,"[True, True]",0,14.12,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-3981,xsum-3981,OpenAI,T2,valid,,,117,107,0.915,stop,1,[True],0,7.0,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-4708,xsum-4708,PaLM,T2,valid,,check:roundtrip_unchanged,57,54,0.947,stop,1,[True],0,4.13,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-3981,xsum-3981,Tsinghua,T2,valid,,check:sentence_drop=24>23,405,395,0.975,stop,3,"[True, True, True]",0,15.56,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-4708,xsum-4708,BigScience,T2,valid,,check:roundtrip_unchanged,94,82,0.872,stop,1,[True],0,6.17,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-4708,xsum-4708,Eleuther-AI,T2,valid,,check:roundtrip_unchanged,145,129,0.89,stop,1,[True],0,9.47,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-4708,xsum-4708,Human,T2,valid,,,99,86,0.869,stop,1,[True],0,7.79,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-4708,xsum-4708,LLAMA,T2,valid,,,79,69,0.873,stop,1,[True],0,5.08,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-4708,xsum-4708,OpenAI,T2,valid,,,42,33,0.786,stop,1,[True],0,2.59,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-4709,xsum-4709,PaLM,T2,valid,,,453,409,0.903,stop,3,"[True, True, True]",0,12.87,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-4708,xsum-4708,Tsinghua,T2,valid,,,94,91,0.968,stop,1,[True],0,6.33,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-4709,xsum-4709,BigScience,T2,valid,,,344,280,0.814,stop,2,"[True, True]",0,12.76,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-4709,xsum-4709,Eleuther-AI,T2,valid,,,134,117,0.873,stop,1,[True],0,8.33,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-4709,xsum-4709,Human,T2,valid,,check:number_change=lost:48600|7500|76000|8000/added:486|75|76|8;check:entity_loss=u-turn,1098,936,0.852,stop,6,"[True, True, True, True, True, True]",0,25.8,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-2638,xsum-2638,BigScience,S3,valid,,,81,89,1.099,stop,1,[True],0,6.65,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-2638,xsum-2638,Eleuther-AI,S3,valid,,check:number_change=lost:15|9/added:,245,226,0.922,stop,2,"[True, True]",0,9.59,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-2638,xsum-2638,Human,S3,valid,,check:sentence_drop=26>20;check:number_change=lost:25/added:,481,443,0.921,stop,3,"[True, True, True]",0,12.77,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-2638,xsum-2638,LLAMA,S3,valid,,,407,443,1.088,stop,2,"[True, True]",0,18.48,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-2638,xsum-2638,OpenAI,S3,valid,,,99,112,1.131,stop,1,[True],0,8.22,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-2638,xsum-2638,PaLM,S3,valid,,,382,403,1.055,stop,2,"[True, True]",0,16.41,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-2638,xsum-2638,Tsinghua,S3,valid,,,300,326,1.087,stop,2,"[True, True]",0,17.62,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-3981,xsum-3981,BigScience,S3,valid,,,222,239,1.077,stop,1,[True],0,16.29,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-3981,xsum-3981,Eleuther-AI,S3,valid,,,176,196,1.114,stop,1,[True],0,13.77,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-3981,xsum-3981,Human,S3,valid,,check:sentence_drop=27>24,426,452,1.061,stop,3,"[True, True, True]",0,17.43,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-3981,xsum-3981,LLAMA,S3,valid,,,302,306,1.013,stop,2,"[True, True]",0,17.42,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-3981,xsum-3981,OpenAI,S3,valid,,,107,117,1.093,stop,1,[True],0,8.14,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-4708,xsum-4708,PaLM,S3,valid,,,54,57,1.056,stop,1,[True],0,4.59,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-3981,xsum-3981,Tsinghua,S3,valid,,,395,406,1.028,stop,2,"[True, True]",0,17.02,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-4708,xsum-4708,BigScience,S3,valid,,,82,94,1.146,stop,1,[True],0,6.57,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-4708,xsum-4708,Eleuther-AI,S3,valid,,,129,145,1.124,stop,1,[True],0,10.25,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-4708,xsum-4708,Human,S3,valid,,,86,99,1.151,stop,1,[True],0,7.55,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-4708,xsum-4708,LLAMA,S3,valid,,,69,78,1.13,stop,1,[True],0,5.79,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-4708,xsum-4708,OpenAI,S3,valid,,,33,42,1.273,stop,1,[True],0,3.15,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-4709,xsum-4709,PaLM,S3,valid,,,409,453,1.108,stop,2,"[True, True]",0,18.76,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-4708,xsum-4708,Tsinghua,S3,valid,,,91,94,1.033,stop,1,[True],0,6.54,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-4709,xsum-4709,BigScience,S3,valid,,,280,344,1.229,stop,2,"[True, True]",0,15.87,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-4709,xsum-4709,Eleuther-AI,S3,valid,,,117,134,1.145,stop,1,[True],0,10.03,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-4709,xsum-4709,Human,S3,valid,,check:number_change=lost:112|486|75|76/added:11200|48600|7500|76000,936,1097,1.172,stop,5,"[True, True, True, True, True]",0,31.43,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-2638,xsum-2638,BigScience,T3,valid,,,89,79,0.888,stop,1,[True],0,5.94,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-2638,xsum-2638,Eleuther-AI,T3,valid,,check:sentence_drop=6>4;check:roundtrip_length_loss=0.86;check:entity_loss=march|mrs|quaile,226,210,0.929,stop,2,"[True, True]",0,8.96,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-2638,xsum-2638,Human,T3,valid,,check:roundtrip_length_loss=0.85;check:entity_loss=iraklis|may,443,409,0.923,stop,3,"[True, True, True]",0,14.84,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-2638,xsum-2638,LLAMA,T3,valid,,,443,421,0.95,stop,3,"[True, True, True]",0,13.58,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-2638,xsum-2638,OpenAI,T3,valid,,check:roundtrip_unchanged,112,99,0.884,stop,1,[True],0,7.72,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-2638,xsum-2638,PaLM,T3,valid,,check:roundtrip_unchanged,403,382,0.948,stop,2,"[True, True]",0,16.03,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-2638,xsum-2638,Tsinghua,T3,valid,,check:roundtrip_unchanged,326,300,0.92,stop,2,"[True, True]",0,13.51,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-3981,xsum-3981,BigScience,T3,valid,,,239,221,0.925,stop,2,"[True, True]",0,12.87,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-3981,xsum-3981,Eleuther-AI,T3,valid,,,196,176,0.898,stop,1,[True],0,11.71,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-3981,xsum-3981,Human,T3,valid,,,452,423,0.936,stop,3,"[True, True, True]",0,15.06,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-3981,xsum-3981,LLAMA,T3,valid,,,306,302,0.987,stop,2,"[True, True]",0,13.71,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-3981,xsum-3981,OpenAI,T3,valid,,check:roundtrip_unchanged,117,107,0.915,stop,1,[True],0,6.88,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-4708,xsum-4708,PaLM,T3,valid,,check:roundtrip_unchanged,57,54,0.947,stop,1,[True],0,4.18,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-3981,xsum-3981,Tsinghua,T3,valid,,check:sentence_drop=24>23,406,395,0.973,stop,3,"[True, True, True]",0,15.89,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-4708,xsum-4708,BigScience,T3,valid,,check:roundtrip_unchanged,94,82,0.872,stop,1,[True],0,6.2,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-4708,xsum-4708,Eleuther-AI,T3,valid,,check:roundtrip_unchanged,145,129,0.89,stop,1,[True],0,9.51,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-4708,xsum-4708,Human,T3,valid,,,99,86,0.869,stop,1,[True],0,7.77,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|LLAMA|xsum-4708,xsum-4708,LLAMA,T3,valid,,,78,68,0.872,stop,1,[True],0,5.13,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|OpenAI|xsum-4708,xsum-4708,OpenAI,T3,valid,,check:roundtrip_unchanged,42,33,0.786,stop,1,[True],0,2.6,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|PaLM|xsum-4709,xsum-4709,PaLM,T3,valid,,check:roundtrip_unchanged,453,409,0.903,stop,3,"[True, True, True]",0,12.95,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Tsinghua|xsum-4708,xsum-4708,Tsinghua,T3,valid,,check:roundtrip_unchanged,94,91,0.968,stop,1,[True],0,6.15,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|BigScience|xsum-4709,xsum-4709,BigScience,T3,valid,,check:roundtrip_unchanged,344,280,0.814,stop,2,"[True, True]",0,12.69,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Eleuther-AI|xsum-4709,xsum-4709,Eleuther-AI,T3,valid,,check:roundtrip_unchanged,134,117,0.873,stop,1,[True],0,8.23,madlad-3b-mt-default-2026-10-31T074620Z-2be1df
+xsum|Human|xsum-4709,xsum-4709,Human,T3,valid,,check:number_change=lost:11200|48600|7500|76000/added:112|486|75|76,1097,935,0.852,stop,6,"[True, True, True, True, True, True]",0,25.76,madlad-3b-mt-default-2026-10-31T074620Z-2be1df

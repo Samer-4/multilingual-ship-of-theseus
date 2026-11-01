@@ -1,0 +1,70 @@
+# Stage 2 experiment configuration. All paths are relative: repo-relative for team files (read-only),
+# Sam-relative for Sam outputs. Path resolution (local vs Kaggle) lives in src/sot_mt/paths.py.
+
+experiment_id: msot_xsum_madlad200
+seed: 6120
+
+corpus:
+  repo: tripto03/Ship_of_theseus_paraphrased_copus
+  commit: 4423d8c29ab3d13170e8a396cec2afda723823f9   # verified in the local clone, 2026-10-30
+  files:                                              # staged into Sam/data/raw/sot_corpus/ (gitignored)
+    - paraphrased_datasets/xsum_paraphrased.csv
+    - train_datasets/xsum_train.csv                   # future RQ2 training pool (disjoint keys)
+
+sample:
+  sample_id: xsum_madlad200
+  dataset: xsum
+  n_items: 200
+  expected_originals: 3227           # the MADLAD worker raised an error if this did not hold
+  procedure: madlad_round_robin_v1   # exact replica of the worker's selection (manifest.py)
+
+languages: {source: en, pivot: es}
+stages: [T0, S1, T1, S2, T2, S3, T3]
+
+legacy:                              # team files, read-only, repo-relative
+  madlad_chain_csv: results/madlad_translation/chain_es_madlad4003b.csv
+  madlad_metrics_csv: results/madlad_translation/matched_item_metrics.csv
+  madlad_notebook: experiments/madlad_translation/madlad_explorer.ipynb
+  madlad_run_id: legacy-madlad-explorer-v100-r1
+
+# README / experiments/madlad_translation/README.md, "Median scores across 197 valid documents".
+readme_madlad_medians:
+  bleu: 0.604
+  rougeL: 0.831
+  chrf: 0.793
+  word_retention: 0.836
+  function_word_cosine: 0.972
+  punctuation_f1: 0.853
+  e5_cosine_multilingual: 0.9818     # code and per-item values absent from the repo
+  bertscore_f1: 0.9217               # code and per-item values absent from the repo
+
+# Output checks (src/sot_mt/checks.py). Blocking checks make a record invalid; warnings do not.
+validation:
+  wrong_language:                    # stop-word-rate heuristic from experiments/qwen_translation/degree_zero_chain.ipynb
+    english_rate_in_spanish_max: 0.05
+    spanish_rate_in_english_max: 0.08
+  repetition:                        # a word 3-gram repeated this often marks a decoding loop
+    trigram_count_min: 6
+    trigram_share_min: 0.10
+  step_word_ratio_warn: [0.6, 1.8]   # output/input words for one translation step (warning only)
+  target_language:                   # output must look like the target language at all (blocking)
+    # measured on all 594 real texts (Stage 2 S1/T1 + T0): non-Latin letter share <= 0.001, MT-output function-word
+    # rate >= 0.041 (T0 >= 0.015); every degenerate/garbage Kaggle output: share >= 0.222 or rate 0.000
+    non_latin_letter_share_max: 0.05
+    function_word_rate_min: 0.01
+    min_words: 20
+  content:                           # nonblocking warnings (checks.content_warnings / roundtrip_content_warnings)
+    # calibrated on the 20 new smoke records: all 3 known omissions flagged (xsum-4710, -4721, -4729), the 2 clean
+    # chains not. On round 1 sentence_drop fires on 42% of S1 steps; sampled cases are real omissions (often a
+    # dropped first sentence inside a packed 300-token segment), so it is a finding, not noise.
+    sentence_drop_min_input: 2       # warn when the output has fewer sentences than an input of >= 2 sentences
+    roundtrip_length_loss_below: 0.9 # warn when English T_r has < 90% of the words of English T_{r-1}
+    max_listed: 4                    # numbers / names listed in a warning
+
+# Runs whose records must never be used as a base table (the runner refuses them). Their outputs stay on
+# disk unchanged, with provenance, for the record.
+quarantined_runs:
+  # Kaggle smoke test, kernel samahmed17/sam-sot-mt-madlad-smoke5 v2, 2026-10-31: transformers 5.16.1 loaded
+  # MADLAD with a decoder embedding separate from `shared` (round 1, 4.46.3, used one shared module);
+  # all 5 S2 outputs degenerate. See reports/stage3/MADLAD_SMOKE_FAILURE.md.
+  - madlad-3b-mt-default-2026-10-31T052125Z-fca149

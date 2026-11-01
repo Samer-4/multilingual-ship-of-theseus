@@ -1,0 +1,75 @@
+{
+ "experiment_id": "msot_xsum_madlad200",
+ "translator": "madlad-3b",
+ "prompt_variant": "mt-default",
+ "generation_config_id": "705a8bd4992e",
+ "base": {
+  "staged_generations_sha256": "a636b3edc37b115ab1292881b930bc3531d2a3b8556cc84a4421d75a513a7ad9",
+  "export": "data/generated/madlad_pilot/b01/xsum/madlad-3b",
+  "export_merged_sha256": "b05fe1b75ea3c6796c0eeda9023afa69a0a147e5e2ef2de52e9fd52186b84cb5",
+  "records": 516
+ },
+ "already_complete_items": [
+  "xsum|BigScience|xsum-2638",
+  "xsum|BigScience|xsum-3981",
+  "xsum|BigScience|xsum-4708",
+  "xsum|BigScience|xsum-4709",
+  "xsum|BigScience|xsum-4720",
+  "xsum|Eleuther-AI|xsum-2638",
+  "xsum|Eleuther-AI|xsum-3981",
+  "xsum|Eleuther-AI|xsum-4708",
+  "xsum|Eleuther-AI|xsum-4709",
+  "xsum|Human|xsum-2638",
+  "xsum|Human|xsum-3981",
+  "xsum|Human|xsum-4708",
+  "xsum|Human|xsum-4709",
+  "xsum|Human|xsum-4721",
+  "xsum|LLAMA|xsum-2638",
+  "xsum|LLAMA|xsum-3981",
+  "xsum|LLAMA|xsum-4708",
+  "xsum|LLAMA|xsum-4729",
+  "xsum|OpenAI|xsum-2638",
+  "xsum|OpenAI|xsum-3981",
+  "xsum|OpenAI|xsum-4708",
+  "xsum|OpenAI|xsum-4710",
+  "xsum|PaLM|xsum-2638",
+  "xsum|PaLM|xsum-4708",
+  "xsum|PaLM|xsum-4709",
+  "xsum|Tsinghua|xsum-2638",
+  "xsum|Tsinghua|xsum-3981",
+  "xsum|Tsinghua|xsum-4708",
+  "xsum|Tsinghua|xsum-4719"
+ ],
+ "remaining_items": 168,
+ "remaining_operations": 672,
+ "runtime_model": {
+  "a": -0.35,
+  "b": 0.0958,
+  "n": 20,
+  "mae_s": 1.29,
+  "source": "verify1 v2 + smoke5 v3 generation_meta.seconds"
+ },
+ "session_fixed_s": 100,
+ "probes_per_batch": 7,
+ "batches": [
+  {
+   "batch": "remainder_01",
+   "items": 168,
+   "operations": 672,
+   "t1_words": 37203,
+   "source_labels": {
+    "BigScience": 23,
+    "Eleuther-AI": 25,
+    "Human": 24,
+    "LLAMA": 23,
+    "OpenAI": 24,
+    "PaLM": 25,
+    "Tsinghua": 24
+   },
+   "all_labels_present": true,
+   "est_translate_s": 7730,
+   "est_session_s": 7914,
+   "file": "remainder_01.csv"
+  }
+ ]
+}

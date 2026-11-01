@@ -1,0 +1,2 @@
+texts,distinct_item_ids,distinct_articles,distinct_groups,sources,duplicate_t0_texts,articles_with_7_sources,articles_with_lt_7_sources
+200,200,31,31,7,0,23,8

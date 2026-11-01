@@ -1,0 +1,42 @@
+{
+ "raw_download": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/results/nllb/full/raw/sam-sot-mt-nllb-full_v1_20261031T142404Z",
+ "export_dir": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/results/nllb/full/raw/sam-sot-mt-nllb-full_v1_20261031T142404Z/sam_outputs/export/nllb__mt-default",
+ "download": {
+  "kernel": "samahmed17/sam-sot-mt-nllb-full",
+  "version": 1,
+  "status_at_download": "COMPLETE",
+  "downloaded_at": "20261031T142412Z",
+  "files": {
+   "sam-sot-mt-nllb-full.log": "057d6174f153fb2cdcae26edc7923b25cdb8de6e5f6eba9b76db73db74b53252",
+   "sam_outputs/export/nllb__mt-default/RESUME.json": "cb0024dc6b687ebb3ec0aa677e1135f1e0196af421b96b7c229f9c5fc70a3fb7",
+   "sam_outputs/export/nllb__mt-default/attrition.csv": "6e1b7f5f7b08a255a57825a1361f65c72ae9dd0b916af4cba32936fba30a053d",
+   "sam_outputs/export/nllb__mt-default/generations_delta.parquet": "b9fc98a886e7c381f4f021dee4d27fbad2361af61343e4fe49a5e07a2d8e453a",
+   "sam_outputs/export/nllb__mt-default/generations_merged.parquet": "586f105621ad8f080e80aa962b183dbc2b1edba4a8b2f590a0e47651a4ad4ea9",
+   "sam_outputs/export/nllb__mt-default/gpu_memory.json": "2c8c8f2743a7e8feb36eb38df399dbbf46891e3dd5e3fd7d2098f3108961232e",
+   "sam_outputs/export/nllb__mt-default/new_translations.csv": "0c73a38eb7c997d0b86b2dd12968b817be65fd58791ee227a669fbf94b8b9621",
+   "sam_outputs/export/nllb__mt-default/runs.parquet": "cd26c01b3f6995e21a3bacc77e0e6d4b61bb188e30f11e412e9aa35c3f936436",
+   "sam_outputs/export/nllb__mt-default/sanity_probe.csv": "b1a4edfc8b0cfb0c06899c887dd8feb3ae719aa085678e95562e267286b7d000",
+   "sam_outputs/export/nllb__mt-default/validation_report.csv": "821e764148fcc935c37d03e9b31d4626d2c0447267e3e3cab15ba6ddba68d94e",
+   "sam_outputs/export/nllb__mt-default.zip": "dd13a20a3041b7e6e9e3fa982a49ddafc014d0f5af201ff856f142637839a0cf",
+   "sam_outputs/runs/nllb__mt-default/generations_delta.parquet": "b9fc98a886e7c381f4f021dee4d27fbad2361af61343e4fe49a5e07a2d8e453a",
+   "sam_outputs/runs/nllb__mt-default/runs.parquet": "cd26c01b3f6995e21a3bacc77e0e6d4b61bb188e30f11e412e9aa35c3f936436"
+  }
+ },
+ "organized_at": "20261031T142414Z",
+ "resume_files": {
+  "attrition.csv": "6e1b7f5f7b08a255a57825a1361f65c72ae9dd0b916af4cba32936fba30a053d",
+  "generations_delta.parquet": "b9fc98a886e7c381f4f021dee4d27fbad2361af61343e4fe49a5e07a2d8e453a",
+  "generations_merged.parquet": "586f105621ad8f080e80aa962b183dbc2b1edba4a8b2f590a0e47651a4ad4ea9",
+  "gpu_memory.json": "2c8c8f2743a7e8feb36eb38df399dbbf46891e3dd5e3fd7d2098f3108961232e",
+  "new_translations.csv": "0c73a38eb7c997d0b86b2dd12968b817be65fd58791ee227a669fbf94b8b9621",
+  "runs.parquet": "cd26c01b3f6995e21a3bacc77e0e6d4b61bb188e30f11e412e9aa35c3f936436",
+  "sanity_probe.csv": "b1a4edfc8b0cfb0c06899c887dd8feb3ae719aa085678e95562e267286b7d000",
+  "validation_report.csv": "821e764148fcc935c37d03e9b31d4626d2c0447267e3e3cab15ba6ddba68d94e"
+ },
+ "merged_records": 1594,
+ "new_records": 1176,
+ "stage2_records_verified": 400,
+ "superseded": [],
+ "progress_events": 2485,
+ "malformed_progress_lines": 0
+}

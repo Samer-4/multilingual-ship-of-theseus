@@ -1,0 +1,4 @@
+item_id,dataset,article_id,group_id,source_label,t0_words,t0_quantile_target,length_band
+xsum|Eleuther-AI|xsum-4714,xsum,xsum-4714,xsum|xsum-4714,Eleuther-AI,76,0.1,short
+xsum|OpenAI|xsum-4715,xsum,xsum-4715,xsum|xsum-4715,OpenAI,176,0.5,medium
+xsum|Human|xsum-4709,xsum,xsum-4709,xsum|xsum-4709,Human,916,1.0,long

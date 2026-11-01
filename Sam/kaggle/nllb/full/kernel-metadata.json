@@ -1,0 +1,22 @@
+{
+ "id": "samahmed17/sam-sot-mt-nllb-full",
+ "title": "sam-sot-mt-nllb-full",
+ "code_file": "00_generate_translations.ipynb",
+ "language": "python",
+ "kernel_type": "notebook",
+ "is_private": true,
+ "enable_gpu": true,
+ "enable_tpu": false,
+ "enable_internet": true,
+ "machine_shape": "NvidiaTeslaT4",
+ "dataset_sources": [
+  "samahmed17/sam-sot-mt-code",
+  "samahmed17/sam-sot-mt-staged"
+ ],
+ "competition_sources": [],
+ "kernel_sources": [
+  "samahmed17/sam-sot-mt-nllb-preflight"
+ ],
+ "model_sources": [],
+ "keywords": []
+}

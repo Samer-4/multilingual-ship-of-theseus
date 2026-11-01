@@ -1,0 +1,21 @@
+{
+ "classes": [
+  "madlad-3b",
+  "nllb",
+  "qwen3-4b"
+ ],
+ "chance": 0.3333333333333333,
+ "models": [
+  "tfidf_word",
+  "tfidf_char",
+  "stylometric",
+  "stylometric_no_sentence",
+  "length_only"
+ ],
+ "best_model": "tfidf_char",
+ "seed": 6120,
+ "folds": 5,
+ "repeats": 5,
+ "cohort": "matched",
+ "texts": 1737
+}

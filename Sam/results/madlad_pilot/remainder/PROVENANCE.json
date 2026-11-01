@@ -1,0 +1,42 @@
+{
+ "raw_download": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/results/madlad_pilot/remainder/raw/sam-sot-mt-madlad-pilot-remainder_v1_20261031T112633Z",
+ "export_dir": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/results/madlad_pilot/remainder/raw/sam-sot-mt-madlad-pilot-remainder_v1_20261031T112633Z/sam_outputs/export/madlad-3b__mt-default",
+ "download": {
+  "kernel": "samahmed17/sam-sot-mt-madlad-pilot-remainder",
+  "version": 1,
+  "status_at_download": "COMPLETE",
+  "downloaded_at": "20261031T112640Z",
+  "files": {
+   "sam-sot-mt-madlad-pilot-remainder.log": "b7787434b95d87031d7a6538698fb0dc0ea3353ba545fb00218bb452bd4f5bb5",
+   "sam_outputs/export/madlad-3b__mt-default/RESUME.json": "60cd6ae4594dae6c7d6fd51022f491e34ba00619e0124cd92d907a9369c5d203",
+   "sam_outputs/export/madlad-3b__mt-default/attrition.csv": "fdb62d3bc58790bf0c4a53a6ea259eb653e098d73d5fe6536cb0cc431d2f0682",
+   "sam_outputs/export/madlad-3b__mt-default/drift_probe.csv": "c3c5483cc2c9cdab37d0105828895a34c4428c95e48432824ecf0477d8d93953",
+   "sam_outputs/export/madlad-3b__mt-default/generations_delta.parquet": "d0cb1c56101c3d7094612c4f95da982dcccc97f8973164529378c4ccacf540d8",
+   "sam_outputs/export/madlad-3b__mt-default/generations_merged.parquet": "accf874fbcf19b4a351d19555ccce0511a13e20df54fa351369d159b52ed6ba4",
+   "sam_outputs/export/madlad-3b__mt-default/new_translations.csv": "5a427d5afd2790d895ddb8145b3cc94a0670322acf99f40cf7c090d7fed25005",
+   "sam_outputs/export/madlad-3b__mt-default/runs.parquet": "478f3fed9fd741b314742a129171ed883f6ca24c43d1fb32c1b97ea5ca57139b",
+   "sam_outputs/export/madlad-3b__mt-default/tokenizer_parity.csv": "ff57ec709c66768686c25cdfe8d53b0a402fd95c762d075dec327bab57cf19bb",
+   "sam_outputs/export/madlad-3b__mt-default/validation_report.csv": "b0fc19712ba4c4fe38f7c48a9ea3bc5243438e20f71f4dc27b50696aff02ea69",
+   "sam_outputs/export/madlad-3b__mt-default.zip": "5265cc4849ca1b7648eef5baae8ca4364c84cf4c6a48d4321ab76feeb41b9e7a",
+   "sam_outputs/runs/madlad-3b__mt-default/generations_delta.parquet": "d0cb1c56101c3d7094612c4f95da982dcccc97f8973164529378c4ccacf540d8",
+   "sam_outputs/runs/madlad-3b__mt-default/runs.parquet": "478f3fed9fd741b314742a129171ed883f6ca24c43d1fb32c1b97ea5ca57139b"
+  }
+ },
+ "organized_at": "20261031T112642Z",
+ "resume_files": {
+  "attrition.csv": "fdb62d3bc58790bf0c4a53a6ea259eb653e098d73d5fe6536cb0cc431d2f0682",
+  "drift_probe.csv": "c3c5483cc2c9cdab37d0105828895a34c4428c95e48432824ecf0477d8d93953",
+  "generations_delta.parquet": "d0cb1c56101c3d7094612c4f95da982dcccc97f8973164529378c4ccacf540d8",
+  "generations_merged.parquet": "accf874fbcf19b4a351d19555ccce0511a13e20df54fa351369d159b52ed6ba4",
+  "new_translations.csv": "5a427d5afd2790d895ddb8145b3cc94a0670322acf99f40cf7c090d7fed25005",
+  "runs.parquet": "478f3fed9fd741b314742a129171ed883f6ca24c43d1fb32c1b97ea5ca57139b",
+  "tokenizer_parity.csv": "ff57ec709c66768686c25cdfe8d53b0a402fd95c762d075dec327bab57cf19bb",
+  "validation_report.csv": "b0fc19712ba4c4fe38f7c48a9ea3bc5243438e20f71f4dc27b50696aff02ea69"
+ },
+ "merged_records": 1186,
+ "new_records": 670,
+ "stage2_records_verified": 400,
+ "superseded": [],
+ "progress_events": 1431,
+ "malformed_progress_lines": 0
+}

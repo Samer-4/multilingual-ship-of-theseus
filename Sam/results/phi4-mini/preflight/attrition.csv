@@ -1,0 +1,7 @@
+experiment_id,translator,prompt_variant,output_stage,items,valid,invalid,blocked,not_attempted,pending
+msot_xsum_madlad200,phi4-mini,free,S1,200,3,0,0,197,0
+msot_xsum_madlad200,phi4-mini,free,T1,200,3,0,0,0,197
+msot_xsum_madlad200,phi4-mini,free,S2,200,3,0,0,0,197
+msot_xsum_madlad200,phi4-mini,free,T2,200,3,0,0,0,197
+msot_xsum_madlad200,phi4-mini,free,S3,200,3,0,0,0,197
+msot_xsum_madlad200,phi4-mini,free,T3,200,3,0,0,0,197

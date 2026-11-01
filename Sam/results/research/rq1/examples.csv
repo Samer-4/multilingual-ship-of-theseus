@@ -1,0 +1,4 @@
+translator,kind,item_id,bertscore_f1,chrf,entity_recall,number_recall
+madlad-3b,largest semantic drop,xsum|BigScience|xsum-4716,0.8808183539293304,0.4521183412934562,0.4285714285714286,0.5714285714285714
+nllb,largest semantic drop,xsum|Human|xsum-4712,0.9028486450942218,0.6511539286413749,1.0,0.75
+qwen3-4b,largest semantic drop,xsum|Eleuther-AI|xsum-4733,0.9100422714772748,0.5744105292632316,0.8571428571428572,

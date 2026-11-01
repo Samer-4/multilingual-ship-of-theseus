@@ -1,0 +1,4 @@
+translator,display_name,dataset,model_checkpoint,generation_config_id,weights_ids,final_dir,generations_merged_sha256,finalized_at,complete_chains,items
+madlad-3b,MADLAD-400-3B,xsum,['google/madlad400-3b-mt'],['705a8bd4992e'],[],data/generated/madlad_final/xsum/madlad-3b,accf874fbcf19b4a351d19555ccce0511a13e20df54fa351369d159b52ed6ba4,2026-10-31T11:30:09Z,196,200
+nllb,NLLB-200-1.3B,xsum,['facebook/nllb-200-distilled-1.3B'],['c63f99caa212'],['7be3e24664b38ce1cac29b8aeed6911aa0cf0576'],data/generated/nllb_final/xsum/nllb,586f105621ad8f080e80aa962b183dbc2b1edba4a8b2f590a0e47651a4ad4ea9,2026-11-01T01:12:53Z,197,200
+qwen3-4b,Qwen3-4B,xsum,['Qwen/Qwen3-4B-Instruct-2507'],['747d97077f38'],['cdbee75f17c01a7cc42f958dc650907174af0554'],data/generated/qwen3-4b_final/xsum/qwen3-4b,5a0e8709a144f3a37959666207821cfc3a9f613cbc9f09d1c429fd724dc58090,2026-11-01T01:12:54Z,200,200

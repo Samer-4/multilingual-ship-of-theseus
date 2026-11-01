@@ -1,0 +1,9 @@
+{
+ "kernel": "samahmed17/sam-sot-mt-nllb-preflight",
+ "version": 1,
+ "pushed_at": "2026-10-31T12:24:35Z",
+ "code_digest": "343ed83a11088085",
+ "code_dataset_version": 9,
+ "notebook_sha256": "728847d77fa01d985b211e1de9ae189359a98e8e7685a1b7b54ee3610d5ae732",
+ "code_uploaded": true
+}

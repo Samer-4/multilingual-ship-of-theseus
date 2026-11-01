@@ -1,0 +1,6 @@
+item_id,article_id,source_label,t1_words,t1_quantile_target,length_band,t0_words,round1_segments_en_es,round1_segments_es_en
+xsum|OpenAI|xsum-4710,xsum-4710,OpenAI,50,0.05,short,51,1,1
+xsum|Tsinghua|xsum-4719,xsum-4719,Tsinghua,104,0.3,medium,110,1,1
+xsum|LLAMA|xsum-4729,xsum-4729,LLAMA,169,0.5,medium,204,2,2
+xsum|Human|xsum-4721,xsum-4721,Human,339,0.75,long,343,2,2
+xsum|BigScience|xsum-4720,xsum-4720,BigScience,558,0.95,long,576,3,4

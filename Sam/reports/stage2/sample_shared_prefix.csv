@@ -1,0 +1,2 @@
+llm_texts_with_human_in_corpus,median_shared_prefix_words,share_with_ge_10_words,share_with_exactly_30_words,llm_texts_lt_40_words_beyond_prefix
+171,30.0,0.959,0.69,18

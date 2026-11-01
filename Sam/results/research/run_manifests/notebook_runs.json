@@ -1,0 +1,32 @@
+{
+ "01_RQ1_Translation_Decay.ipynb": {
+  "returncode": 0,
+  "seconds": 13.5,
+  "notebook": "01_RQ1_Translation_Decay.ipynb",
+  "code_cells": 15,
+  "unexecuted": 0,
+  "errors": 0,
+  "figures": 5,
+  "executed_at": "2026-11-01T02:29:21.221876+00:00"
+ },
+ "02_RQ2_Source_Attribution.ipynb": {
+  "returncode": 0,
+  "seconds": 151.9,
+  "notebook": "02_RQ2_Source_Attribution.ipynb",
+  "code_cells": 9,
+  "unexecuted": 0,
+  "errors": 0,
+  "figures": 4,
+  "executed_at": "2026-11-01T02:29:21.223088+00:00"
+ },
+ "03_RQ3_Translator_Fingerprint.ipynb": {
+  "returncode": 0,
+  "seconds": 511.8,
+  "notebook": "03_RQ3_Translator_Fingerprint.ipynb",
+  "code_cells": 9,
+  "unexecuted": 0,
+  "errors": 0,
+  "figures": 4,
+  "executed_at": "2026-11-01T02:29:21.223090+00:00"
+ }
+}

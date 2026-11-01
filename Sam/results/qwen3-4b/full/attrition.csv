@@ -1,0 +1,7 @@
+experiment_id,translator,prompt_variant,output_stage,items,valid,invalid,blocked,not_attempted,pending
+msot_xsum_madlad200,qwen3-4b,free,S1,200,200,0,0,0,0
+msot_xsum_madlad200,qwen3-4b,free,T1,200,200,0,0,0,0
+msot_xsum_madlad200,qwen3-4b,free,S2,200,200,0,0,0,0
+msot_xsum_madlad200,qwen3-4b,free,T2,200,200,0,0,0,0
+msot_xsum_madlad200,qwen3-4b,free,S3,200,200,0,0,0,0
+msot_xsum_madlad200,qwen3-4b,free,T3,200,200,0,0,0,0

@@ -1,0 +1,42 @@
+{
+ "raw_download": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/results/qwen3-4b/full/raw/sam-sot-mt-qwen3-4b-full_v1_20261031T213750Z",
+ "export_dir": "/Users/samerahmed/multilingual-ship-of-theseus/Sam/results/qwen3-4b/full/raw/sam-sot-mt-qwen3-4b-full_v1_20261031T213750Z/sam_outputs/export/qwen3-4b__free",
+ "download": {
+  "kernel": "samahmed17/sam-sot-mt-qwen3-4b-full",
+  "version": 1,
+  "status_at_download": "COMPLETE",
+  "downloaded_at": "20261031T213757Z",
+  "files": {
+   "sam-sot-mt-qwen3-4b-full.log": "3ecdc1cb59af330199a5e42a651505284f1f97f270cd7fb400ec848035460f68",
+   "sam_outputs/export/qwen3-4b__free/RESUME.json": "a6273c801e5dab6b90b9a2fe90a82c0729b1c4e5731ac7626e736a60a3019739",
+   "sam_outputs/export/qwen3-4b__free/attrition.csv": "3a3a8224747432f3d4e4d98f09e6a3ba446d214679cdb0cbafba6ddfb7920fa2",
+   "sam_outputs/export/qwen3-4b__free/generations_delta.parquet": "7a9169cf4461a23da858606dd714ff47cd429ecb2c5f667db58b11ce33cb06f1",
+   "sam_outputs/export/qwen3-4b__free/generations_merged.parquet": "5a0e8709a144f3a37959666207821cfc3a9f613cbc9f09d1c429fd724dc58090",
+   "sam_outputs/export/qwen3-4b__free/gpu_memory.json": "8b86427f819756c28d53848eca7685081fac3225bb97de6f4eb14b6a3fd22042",
+   "sam_outputs/export/qwen3-4b__free/new_translations.csv": "d1bd47fa856bd906282e8082cee5f6a8583795d36932669a2e32b3f4609fc12b",
+   "sam_outputs/export/qwen3-4b__free/runs.parquet": "a014b0ed6aef3870022aa21d81055675d01890273eee7e107810f68b55185ab1",
+   "sam_outputs/export/qwen3-4b__free/sanity_probe.csv": "9336f3190193d53e1c53054c3f8f89922adf9170ce3bf24587542ddcb1e53c4d",
+   "sam_outputs/export/qwen3-4b__free/validation_report.csv": "f98ab34880a4a15264214bf24e536953497b880c5a46402fa7a70ce0776efcae",
+   "sam_outputs/export/qwen3-4b__free.zip": "01a45736c5eea5879c6c025377e1494e524ca1414b1540cab471c84a75eb3001",
+   "sam_outputs/runs/qwen3-4b__free/generations_delta.parquet": "7a9169cf4461a23da858606dd714ff47cd429ecb2c5f667db58b11ce33cb06f1",
+   "sam_outputs/runs/qwen3-4b__free/runs.parquet": "a014b0ed6aef3870022aa21d81055675d01890273eee7e107810f68b55185ab1"
+  }
+ },
+ "organized_at": "20261031T213759Z",
+ "resume_files": {
+  "attrition.csv": "3a3a8224747432f3d4e4d98f09e6a3ba446d214679cdb0cbafba6ddfb7920fa2",
+  "generations_delta.parquet": "7a9169cf4461a23da858606dd714ff47cd429ecb2c5f667db58b11ce33cb06f1",
+  "generations_merged.parquet": "5a0e8709a144f3a37959666207821cfc3a9f613cbc9f09d1c429fd724dc58090",
+  "gpu_memory.json": "8b86427f819756c28d53848eca7685081fac3225bb97de6f4eb14b6a3fd22042",
+  "new_translations.csv": "d1bd47fa856bd906282e8082cee5f6a8583795d36932669a2e32b3f4609fc12b",
+  "runs.parquet": "a014b0ed6aef3870022aa21d81055675d01890273eee7e107810f68b55185ab1",
+  "sanity_probe.csv": "9336f3190193d53e1c53054c3f8f89922adf9170ce3bf24587542ddcb1e53c4d",
+  "validation_report.csv": "f98ab34880a4a15264214bf24e536953497b880c5a46402fa7a70ce0776efcae"
+ },
+ "merged_records": 1600,
+ "new_records": 1182,
+ "stage2_records_verified": 400,
+ "superseded": [],
+ "progress_events": 2801,
+ "malformed_progress_lines": 0
+}

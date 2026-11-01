@@ -1,0 +1,5 @@
+item_id,article_id,source_label,output_stage,validation_status,validation_reason,validation_warnings,input_words,output_words,length_ratio,finish,n_segments,segment_hit_eos,oom_retries,seconds,run_id
+xsum|LLAMA|xsum-4729,xsum-4729,LLAMA,S2,valid,,,169,177,1.047,stop,1,[True],0,15.78,madlad-3b-mt-default-2026-10-31T064015Z-89f40f
+xsum|LLAMA|xsum-4729,xsum-4729,LLAMA,T2,valid,,,177,162,0.915,stop,2,"[True, True]",0,11.4,madlad-3b-mt-default-2026-10-31T064015Z-89f40f
+xsum|LLAMA|xsum-4729,xsum-4729,LLAMA,S3,valid,,,162,177,1.093,stop,1,[True],0,15.89,madlad-3b-mt-default-2026-10-31T064015Z-89f40f
+xsum|LLAMA|xsum-4729,xsum-4729,LLAMA,T3,valid,,,177,161,0.91,stop,2,"[True, True]",0,11.32,madlad-3b-mt-default-2026-10-31T064015Z-89f40f

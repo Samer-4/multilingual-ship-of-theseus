@@ -1,0 +1,25 @@
+# Research layer (RQ1-RQ3 notebooks): Python 3.12, CPU. Install into Sam/.venv-research:
+#   /opt/homebrew/bin/python3.12 -m venv Sam/.venv-research && Sam/.venv-research/bin/pip install -r Sam/requirements-research.txt
+#   Sam/.venv-research/bin/python -m spacy download en_core_web_sm      # spaCy model 3.8.0
+# Metric libraries pinned to the versions the MADLAD worker / Stage 2 used (numpy, sacrebleu, rouge-score).
+numpy==1.26.4
+pandas==2.2.3
+pyarrow==17.0.0
+PyYAML==6.0.2
+pytest==8.3.3
+sacrebleu==2.5.1
+rouge_score==0.1.2
+scikit-learn==1.5.2
+scipy==1.17.1
+torch==2.15.0
+transformers==5.22.1
+tokenizers==0.23.3
+huggingface_hub==2.4.0
+sentence-transformers==6.2.0
+bert-score==0.3.13
+spacy==3.8.18
+matplotlib==3.11.2
+nbformat==5.11.1
+nbconvert==7.17.2
+nbclient==0.11.0
+ipykernel==7.4.0

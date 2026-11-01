@@ -1,0 +1,8 @@
+source_label,texts,articles,median_words,min_words,max_words
+BigScience,29,29,221.0,30,652
+Eleuther-AI,29,29,99.0,42,590
+Human,29,29,355.0,83,916
+LLAMA,29,29,299.0,54,733
+OpenAI,28,28,105.5,35,176
+PaLM,28,28,317.5,40,548
+Tsinghua,28,28,123.5,29,684

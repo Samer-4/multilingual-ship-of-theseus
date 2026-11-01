@@ -1,0 +1,40 @@
+{
+ "items": 200,
+ "articles": 31,
+ "source_labels": [
+  "BigScience",
+  "Eleuther-AI",
+  "Human",
+  "LLAMA",
+  "OpenAI",
+  "PaLM",
+  "Tsinghua"
+ ],
+ "translators": [
+  "madlad-3b",
+  "nllb",
+  "qwen3-4b"
+ ],
+ "matched_items": 193,
+ "complete_chains": {
+  "madlad-3b": 196,
+  "nllb": 197,
+  "qwen3-4b": 200
+ },
+ "texts_parquet_sha256": "2a02e644b4d6999d14abfb00b80dcf3d8ac0df0a3ce04fac5ef0997cbf5bacfa",
+ "lineage": {
+  "valid_records_checked": 3570,
+  "failures": [],
+  "generation_config_ids": {
+   "madlad-3b": [
+    "705a8bd4992e"
+   ],
+   "nllb": [
+    "c63f99caa212"
+   ],
+   "qwen3-4b": [
+    "747d97077f38"
+   ]
+  }
+ }
+}

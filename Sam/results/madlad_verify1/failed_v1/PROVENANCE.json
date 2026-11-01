@@ -1,0 +1,17 @@
+{
+ "raw_download": "results/madlad_verify1/raw/sam-sot-mt-madlad-verify1_failed_20261031T061019Z",
+ "copied": {
+  "madlad_diagnostic.json": "dbb9af5344d87c8be075d94d0eac8c2741a158b1203bf4ff95e97a1847a95032",
+  "tokenizer_parity.csv": "ff57ec709c66768686c25cdfe8d53b0a402fd95c762d075dec327bab57cf19bb",
+  "sam-sot-mt-madlad-verify1.log": "6a3486255db4c4b627c98986177b8418db9f2427bbeb697b28fbb957a6d3c0de"
+ },
+ "push": {
+  "kernel": "samahmed17/sam-sot-mt-madlad-verify1",
+  "version": 1,
+  "pushed_at": "2026-10-31T06:04:01Z",
+  "code_digest": "7afa6c1e072a4741",
+  "code_dataset_version": 4,
+  "notebook_sha256": "439b34404354580bb7b88270b71cb6a76e6171c1efc5900e53220c6573bcba95",
+  "code_uploaded": true
+ }
+}

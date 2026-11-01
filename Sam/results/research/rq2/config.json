@@ -1,0 +1,29 @@
+{
+ "labels": [
+  "Human",
+  "BigScience",
+  "Eleuther-AI",
+  "LLAMA",
+  "OpenAI",
+  "PaLM",
+  "Tsinghua"
+ ],
+ "models": [
+  "tfidf_word",
+  "tfidf_char",
+  "stylometric",
+  "length_only"
+ ],
+ "best_model": "tfidf_char",
+ "seed": 6120,
+ "folds": 5,
+ "repeats": 5,
+ "train": "T0 of training articles",
+ "translators": [
+  "madlad-3b",
+  "nllb",
+  "qwen3-4b"
+ ],
+ "chance": 0.14285714285714285,
+ "hyperparameters": "fixed; see src/sot_research/classify.py make_model"
+}
