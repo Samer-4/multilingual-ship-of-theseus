@@ -23,7 +23,7 @@ RQ2 protocol is in `docs/protocol_rq2.md`, and RQ1 metrics are in `docs/metric_s
 | Scope | Documents | Used for | Status |
 |---|---|---|---|
 | **Matched XSum** | Samer's XSum documents that **all 4 paraphrasers and all 3 translators** completed to T3: **178 documents, 31 articles**. That gives 2,136 paraphrase texts and 1,602 translator texts | Paraphrasers vs translators | Done |
-| **Full corpus** | Every completer original of the 7 SoT datasets: 16,682 originals, 2,996 articles, about 200k paraphrase texts | Paraphraser identification with statistical power, per dataset | Planned (§8) |
+| **Full corpus** | Every completer original of the 7 SoT datasets: 16,682 originals, 2,996 articles, about 200k paraphrase texts | Paraphraser identification with statistical power, per dataset | Runner ready (§8), not yet run |
 
 - **One family at a time:** paraphrasers are classified on our texts. Translators come from Samer's published predictions; the translations themselves are not in the repo (corpus licence).
 - **Balance:** every class contributes the same documents at every round, checked by assertion. Original sources are therefore balanced across classes by construction.
@@ -100,6 +100,7 @@ From `Sam/`, with `PYTHONPATH=src`:
 python scripts/import_samer_rq1.py --files-only   # Samer's RQ3 predictions and folds (seconds)
 python scripts/rq2_attribution.py                 # computes the stylometric features RQ3 reuses (~3 min)
 python scripts/rq3_fingerprint.py                 # all four experiments on matched XSum (~10 min, local)
+# full corpus, on Colab (> 10 min): notebooks/colab_rq3_fingerprint.ipynb runs scripts/rq3_full.py (~1 h)
 ```
 Then run `notebooks/rq3_rewriter_fingerprint.ipynb` top to bottom. It only reads cached predictions.
 
@@ -107,6 +108,7 @@ Then run `notebooks/rq3_rewriter_fingerprint.ipynb` top to bottom. It only reads
 |---|---|
 | `rq3_paraphrase_predictions.parquet` | all four experiments, one row per repeat × text × model |
 | `rq3_pool_features.parquet` | text-free descriptives per text (lengths, stylometric features, typography flag) |
+| `rq3_full_predictions.parquet`, `rq3_full_pool_features.parquet` | full corpus: all four experiments per dataset, and text-free descriptives (T0 and pool) |
 
 Committed tables and figures are in `results/rq3_fingerprint/`.
 
@@ -117,9 +119,16 @@ Committed tables and figures are in `results/rq3_fingerprint/`.
 | Chance-corrected macro-F1 alongside raw | Raw macro-F1 | The families have different K |
 | Common cohort of 178 documents | 193 (his matched set) | Both families must be scored on the same documents |
 | Paired article bootstrap for the family difference | — | Same documents and articles in both families |
-| Full corpus (planned): per-dataset classifiers, team-standard function words, possibly 1 repeat | — (XSum only) | Genre differences, held-out vocabulary per the metric standard, compute (§8) |
+| Full corpus: per-dataset classifiers, team-standard function words, possibly 1 repeat | — (XSum only) | Genre differences, held-out vocabulary per the metric standard, compute (§8) |
 
-## 8. Full corpus (planned)
+## 8. Full corpus
+
+- **Runner:** `scripts/rq3_full.py`, run on Colab by `notebooks/colab_rq3_fingerprint.ipynb`.
+  - 189 jobs: 7 datasets × (5 main models + 6 cross-round + 14 leave-one-source-out + 2 typography).
+  - Each job saves its own part file, so a disconnect only means re-running the cells.
+  - `--repeats` defaults to 1. With `--repeats 5`, leave-one-source-out uses 2 shufflings, as in Samer's protocol.
+  - `--limit N` runs on the RQ2 smoke-test files (`rq2_full_*_limitN`). With 15 articles per dataset this takes 2.3 min locally.
+- **Cohort:** per dataset, originals that all 4 paraphrasers completed at T1-T3. Balance is asserted per dataset and round. Every original in `sot_sample.parquet` qualifies (the sample already holds completers only).
 
 - **Scope:** paraphraser identification per dataset on all 7 datasets, about 200k rewritten texts, with all four experiments.
 - **Inputs:** reuses the texts and the `full_text` stylometric features saved by the RQ2 full-corpus run, so no new spaCy pass.
