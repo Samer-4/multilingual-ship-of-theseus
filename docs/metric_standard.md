@@ -19,7 +19,12 @@ rewritten text.
 ## Retained scale
 
 - Similarities (1 = identical): `retained = (s - floor) / (1 - floor)`.
-- Distances (0 = identical; `punct_l1`, `pos_jsd`, `dep_jsd`, `burrows_delta`): `retained = (floor - d) / floor`.
+- Distances (0 = identical; `punct_l1`, `pos_jsd`, `dep_jsd`, `burrows_delta`, `word_edit_rate`): `retained = (floor - d) / floor`.
+
+The floor is the per-dataset **mean**, except for `word_edit_rate`, which uses the **median**: it is unbounded
+(edits / reference words), and unrelated pairs with a very short reference reach 30-85, which pulls the mean to
+~2.6 while the typical unrelated pair sits at ~1.0. With the mean, a near-total rewrite (Dipper high) would
+score 0.62 retained; with the median it scores 0.04, in line with the other lexical metrics.
 
 `retained = 1` means identical to T0, and `0` means no closer than an unrelated original from the same dataset.
 Values can fall below 0. `retained(score, floor, metric)` applies the correct formula.

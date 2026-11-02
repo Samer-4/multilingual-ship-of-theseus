@@ -1,0 +1,5 @@
+variant,round-1 share of T3 loss (chrf),round-1 share of T3 loss (bertscore_f1_rescaled)
+chatgpt,0.904,0.854
+dipper,0.788,0.776
+palm,0.802,0.792
+pegasus(full),0.714,0.744

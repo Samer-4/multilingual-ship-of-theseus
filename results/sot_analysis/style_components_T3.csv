@@ -1,0 +1,5 @@
+variant,Surface (z-cosine),Punctuation (z-cosine),Punctuation L1,Function words (z-cosine),Function-word cosine,Burrows' Delta,POS (z-cosine),POS JSD,Dependency JSD,Char 2-4-gram TF-IDF,Char 3-gram cosine
+chatgpt,0.401,0.327,0.328,0.435,0.514,0.399,0.548,0.63,0.488,0.54,0.533
+palm,0.637,0.403,0.382,0.577,0.605,0.493,0.638,0.657,0.568,0.62,0.614
+dipper,0.451,0.187,0.17,0.36,0.417,0.256,0.447,0.482,0.364,0.356,0.391
+pegasus(full),0.52,0.335,0.141,0.585,0.607,0.43,0.549,0.364,0.39,0.647,0.589

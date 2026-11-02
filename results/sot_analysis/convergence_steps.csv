@@ -1,0 +1,7 @@
+,word_edit_rate,word_edit_rate,word_edit_rate,exact_equal,exact_equal,exact_equal
+step,T0→T1,T1→T2,T2→T3,T0→T1,T1→T2,T2→T3
+variant,,,,,,
+chatgpt,0.707,0.413,0.364,0.0,0.0,0.0
+dipper,0.878,0.86,0.834,0.0,0.0,0.0
+palm,0.533,0.261,0.191,0.0,0.006,0.024
+pegasus(full),0.528,0.392,0.329,0.0,0.009,0.025
