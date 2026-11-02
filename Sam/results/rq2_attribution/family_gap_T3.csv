@@ -1,0 +1,9 @@
+ablation,model,translation,paraphrase,gap,ci_low,ci_high
+full_text,length_only,0.2947,0.255,0.0397,0.0087,0.0727
+opening_removed,length_only,0.3107,0.2647,0.046,0.0122,0.0832
+full_text,stylometric,0.3463,0.245,0.1013,0.0651,0.136
+opening_removed,stylometric,0.3457,0.2528,0.0929,0.0617,0.1253
+full_text,tfidf_char,0.3925,0.309,0.0835,0.0429,0.1211
+opening_removed,tfidf_char,0.3925,0.3095,0.083,0.0437,0.1226
+full_text,tfidf_word,0.3283,0.3027,0.0256,-0.0104,0.0625
+opening_removed,tfidf_word,0.3795,0.3047,0.0748,0.0343,0.1171

@@ -1,0 +1,9 @@
+who,tfidf_word,tfidf_char,stylometric
+Original,0.105,0.142,0.1
+ChatGPT,0.072,0.041,0.026
+PaLM,0.043,0.052,-0.015
+Dipper,-0.009,0.023,-0.064
+Pegasus,0.095,0.102,0.038
+MADLAD-400-3B,0.07,0.075,0.035
+NLLB-200-1.3B,0.095,0.113,0.069
+Qwen3-4B,0.046,0.061,0.001

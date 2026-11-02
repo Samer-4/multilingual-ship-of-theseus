@@ -1,0 +1,3 @@
+ablation,Word n-grams,Char n-grams,Stylometric,Length only
+full_text,1.0,1.0,1.0,1.0
+opening_removed,1.0,1.0,1.0,1.0

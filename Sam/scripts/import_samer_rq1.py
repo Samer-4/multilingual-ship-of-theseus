@@ -25,7 +25,13 @@ from pilot.metrics import (extra_lexical_scores, extract_info, information_score
                            score_neural_extra, score_semantic, text_hash)
 
 FILES = {"samer_pair_metrics.parquet": "Sam/results/research/metrics/pair_metrics.parquet",
-         "samer_items.csv": "Sam/data/manifests/xsum_madlad200_ids.csv"}
+         "samer_items.csv": "Sam/data/manifests/xsum_madlad200_ids.csv",
+         # RQ2 (source attribution): his per-text predictions, fold assignments, stylometric reference lists and
+         # text-free per-text features, used to validate the port in pilot.attribution
+         "samer_rq2_predictions.parquet": "Sam/results/research/rq2/predictions.parquet",
+         "samer_rq2_splits.csv": "Sam/results/research/rq2/splits.csv",
+         "samer_reference_lists.json": "Sam/results/research/shared_features/reference_lists.json",
+         "samer_text_features.parquet": "Sam/results/research/shared_features/text_features.parquet"}
 ID = ["dataset", "floor_id"]
 
 if __name__ == "__main__":
@@ -33,6 +39,7 @@ if __name__ == "__main__":
     ap.add_argument("--branch", default="origin/feature/sam-experiments")
     ap.add_argument("--derived", type=Path)
     ap.add_argument("--sot", type=Path)
+    ap.add_argument("--files-only", action="store_true", help="only extract the files; skip the baseline rescoring")
     a = ap.parse_args()
     cfg = load_config()
     D, SOT = a.derived or cfg["paths"]["derived"], a.sot or cfg["paths"]["sot"]
@@ -41,6 +48,8 @@ if __name__ == "__main__":
         blob = subprocess.run(["git", "show", f"{a.branch}:{path}"], cwd=ROOT, capture_output=True, check=True).stdout
         (D / name).write_bytes(blob)
         print(f"{name}: {len(blob) / 1e3:.0f} kB from {a.branch}:{path}", flush=True)
+    if a.files_only:
+        raise SystemExit(0)
 
     c = load_corpus(SOT)
     t0 = c[(c.dataset == "xsum") & (c["round"] == 0) & (c.variant == "original")].drop_duplicates("text")
