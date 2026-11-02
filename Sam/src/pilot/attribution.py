@@ -126,6 +126,49 @@ def scores(preds: pd.DataFrame, by: list, labels: list, n_boot: int = 1000, seed
     return pd.DataFrame(rows)
 
 
+def scores_fast(preds: pd.DataFrame, by: list, labels: list, n_boot: int = 1000, seed: int = 6120) -> pd.DataFrame:
+    """Same statistics as `scores`, vectorized for the full corpus (millions of predictions). The bootstrap draws
+    multinomial article weights and sums per-article confusion counts, which is equivalent to resampling articles
+    with replacement (only the random stream differs from `scores`)."""
+    rng = np.random.default_rng(seed)
+    labels = list(labels)
+    L = len(labels)
+    code = {c: i for i, c in enumerate(labels)}
+    rows = []
+    for g, part in preds.groupby(by, observed=True):
+        g = g if isinstance(g, tuple) else (g,)
+        yt = part.y_true.map(code).to_numpy()
+        yp = part.y_pred.map(code).to_numpy()
+        art, a_idx = np.unique(part.article_id.to_numpy(), return_inverse=True)
+        A = len(art)
+        # per article: tp, fp, fn per class, correct, total
+        C = np.zeros((A, 3 * L + 2))
+        ok = yt == yp
+        np.add.at(C, (a_idx, yt), ok)                    # tp
+        np.add.at(C, (a_idx, L + yp), ~ok)               # fp
+        np.add.at(C, (a_idx, 2 * L + yt), ~ok)           # fn
+        np.add.at(C, (a_idx, 3 * L), ok)
+        np.add.at(C, (a_idx, 3 * L + 1), 1)
+        W = rng.multinomial(A, np.full(A, 1 / A), size=n_boot)
+        S = W @ C
+        tp, fp, fn = S[:, :L], S[:, L:2 * L], S[:, 2 * L:3 * L]
+        den = 2 * tp + fp + fn
+        f1 = np.where(den > 0, 2 * tp / np.where(den > 0, den, 1), 0.0).mean(axis=1)
+        acc = S[:, 3 * L] / S[:, 3 * L + 1]
+        rep = part.repeat.to_numpy()
+        per_f, per_a = [], []
+        for r in np.unique(rep):
+            m = rep == r
+            per_f.append(macro_f1(yt[m], yp[m], range(L)))
+            per_a.append(float(ok[m].mean()))
+        rows.append({**dict(zip(by, g)), "accuracy": np.mean(per_a), "accuracy_sd": np.std(per_a, ddof=1),
+                     "accuracy_ci_low": np.percentile(acc, 2.5), "accuracy_ci_high": np.percentile(acc, 97.5),
+                     "macro_f1": np.mean(per_f), "macro_f1_sd": np.std(per_f, ddof=1),
+                     "macro_f1_ci_low": np.percentile(f1, 2.5), "macro_f1_ci_high": np.percentile(f1, 97.5),
+                     "n_texts": part.text_id.nunique(), "n_articles": A, "repeats": len(per_f), "chance": 1 / L})
+    return pd.DataFrame(rows)
+
+
 def per_class(preds: pd.DataFrame, by: list, labels: list) -> pd.DataFrame:
     """Precision / recall / F1 per class, pooled over repeats."""
     rows = []
