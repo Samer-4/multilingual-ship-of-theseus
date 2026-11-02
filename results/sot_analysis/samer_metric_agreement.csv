@@ -1,0 +1,13 @@
+metric,max |ours - Samer|,NaN mismatches
+bleu,0.0,0.0
+rougeL,0.0,0.0
+chrf,0.0,0.0
+word_edit_rate,0.0,0.0
+bertscore_f1_rescaled,0.0005,0.0
+mpnet_cosine,0.0,0.0
+e5_cosine,0.0,0.0
+entity_recall,0.0,0.0
+number_recall,0.0,0.0
+quantity_recall,0.0,0.0
+sent_coverage,0.0,0.0
+word_retention,0.4389,0.0

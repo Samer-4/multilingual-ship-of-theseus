@@ -78,3 +78,7 @@ They are **heuristic warnings, not validated factual errors**.
 - Samer's `sot_research` package (branch `feature/sam-experiments`) still uses multiset word retention over all
   tokens, raw BERTScore as the headline, and T0-fitted style vocabularies. It needs the same changes before RQ1
   numbers can be pooled with the paraphrase baseline.
+- Until then, `sot_analysis.ipynb` §5 pools only the metrics his published per-pair scores already share with
+  this standard. On his 368 baseline pairs (identical T0 texts) our code reproduces BLEU, ROUGE-L, chrF, word edit
+  rate, MPNet, E5, entity/number/quantity recall and sentence coverage exactly, and rescaled BERTScore within 0.0005
+  (`results/sot_analysis/samer_metric_agreement.csv`). Word retention and style are excluded.
