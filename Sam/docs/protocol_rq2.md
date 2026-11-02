@@ -25,7 +25,7 @@ identically defined experiments. The RQ3 protocol is in `docs/protocol_rq3.md`, 
 | Scope | Documents | Used for | Status |
 |---|---|---|---|
 | **Matched XSum** | Samer's 200 XSum T0 documents (31 articles × up to 7 sources), restricted to those **all 3 translators and all 4 paraphrasers** completed to T3: **178 documents, 31 articles** | Paraphrase vs translation | Done |
-| **Full corpus** | Every completer original of the 7 SoT datasets (`data/derived/sot_sample.parquet`): **16,682 originals, 2,996 articles**, with the ChatGPT / PaLM / Dipper / Pegasus rewrites T1-T3 | Paraphrase only, with statistical power and per-dataset results | Running on Colab |
+| **Full corpus** | Every completer original of the 7 SoT datasets (`data/derived/sot_sample.parquet`): **16,682 originals, 2,996 articles**, with the ChatGPT / PaLM / Dipper / Pegasus rewrites T1-T3 | Paraphrase only, with statistical power and per-dataset results | Done (13.0M predictions) |
 
 - **Identical originals:** Samer's T0 texts are **byte-identical** to ours (SHA-256 checked for all 200).
 - **Translations:** they exist only for the 200 XSum documents and are **not in the repo** (corpus licence). Only Samer's text-free per-text predictions are used (`scripts/import_samer_rq1.py`).
