@@ -1,13 +1,14 @@
-"""Metrics for the Ship of Theseus corpus analysis (docs/sot_analysis_plan.md).
+"""Metrics for the Ship of Theseus analyses, following the team metric standard (docs/metric_standard.md).
 
-Lexical ("planks"): BLEU, ROUGE-1/2/L, content-word retention.
-Semantic ("hull"): BERTScore (roberta-large, layer 17, baseline-rescaled) for texts of any length,
-                   plus a chunked sentence-embedding cosine as a check.
-Style: dense stylometric vectors (surface, punctuation, function words, POS, dependency depth) and
-       character n-gram TF-IDF.
+Lexical ("planks"): BLEU, ROUGE-1/2/L, content-word retention (stop words excluded).
+Semantic ("hull"): BERTScore (roberta-large, layer 17, baseline-rescaled) for texts of any length, and MPNet
+                   cosine (sentence-packed 384-token chunks, token-count-weighted mean; Samer's method).
+Style: the union of both team pipelines, combined into one score by feature family (STYLE_FAMILIES).
+Every score is reported on the retained scale against unrelated T0 pairs of the same dataset (`retained`).
 """
 
 import re
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -156,30 +157,80 @@ class LongBertScore:
         r = sim[:, 1:-1].max(dim=0).values.mean().item()
         f = 2 * p * r / (p + r) if p + r else 0.0
         b = self.baseline
-        return {"bertscore_p": (p - b["P"]) / (1 - b["P"]), "bertscore_r": (r - b["R"]) / (1 - b["R"]),
-                "bertscore_f": (f - b["F"]) / (1 - b["F"])}
+        return {"bertscore_p_rescaled": (p - b["P"]) / (1 - b["P"]),
+                "bertscore_r_rescaled": (r - b["R"]) / (1 - b["R"]),
+                "bertscore_f1_rescaled": (f - b["F"]) / (1 - b["F"])}
 
 
-class ChunkedSentenceEmbedder:
-    """Sentence-embedding cosine for long texts: mean of normalized chunk embeddings (~200 words each)."""
+SENT_SPLIT = re.compile(r"(?<=[.!?])\s+")
 
-    def __init__(self, model_name: str = "sentence-transformers/all-mpnet-base-v2", device: str = "auto",
-                 chunk_words: int = 200):
-        from sentence_transformers import SentenceTransformer
 
-        self.model = SentenceTransformer(model_name, device=best_device(device))
-        self.chunk_words = chunk_words
+class SentenceChunkEmbedder:
+    """Document cosine for texts of any length (same method as Samer's sot_research.neural.ChunkEmbedder).
+    Each text is split into sentences, packed greedily into chunks that fit the encoder window, each chunk
+    mean-pooled and L2-normalized; the document vector is the token-count-weighted mean of its chunk vectors,
+    re-normalized. A text that fits one window gets the standard single-pass embedding. Nothing is truncated."""
+
+    def __init__(self, model_name: str = "sentence-transformers/all-mpnet-base-v2", max_tokens: int = 384,
+                 device: str = "auto", batch_size: int = 16):
+        import torch
+        from transformers import AutoModel, AutoTokenizer
+
+        self.torch = torch
+        self.tok = AutoTokenizer.from_pretrained(model_name)
+        self.device = best_device(device)
+        self.model = AutoModel.from_pretrained(model_name).to(self.device).eval()
+        self.max_tokens, self.batch_size = max_tokens, batch_size
+        self.chunked_texts = 0
+
+    def _len(self, s: str) -> int:
+        return len(self.tok(s, add_special_tokens=True)["input_ids"])
+
+    def chunks(self, text: str) -> list[str]:
+        def fit(parts):
+            s = " ".join(parts)
+            if self._len(s) <= self.max_tokens:
+                return [s]
+            if len(parts) > 1:
+                h = len(parts) // 2
+                return fit(parts[:h]) + fit(parts[h:])
+            words = s.split()
+            if len(words) <= 1:
+                raise ValueError("a single word exceeds the encoder window")
+            h = len(words) // 2
+            return fit([" ".join(words[:h])]) + fit([" ".join(words[h:])])
+
+        sents = [x for x in SENT_SPLIT.split(text.strip()) if x] or [text.strip()]
+        if self._len(" ".join(sents)) <= self.max_tokens:
+            return [" ".join(sents)]
+        out, cur = [], []
+        for s in sents:
+            if cur and self._len(" ".join(cur + [s])) > self.max_tokens:
+                out += fit(cur)
+                cur = []
+            cur.append(s)
+        return out + fit(cur) if cur else out
 
     def embed(self, texts: list[str]) -> np.ndarray:
+        torch = self.torch
         chunks, owner = [], []
         for i, t in enumerate(texts):
-            words = t.split() or [""]
-            for k in range(0, len(words), self.chunk_words):
-                chunks.append(" ".join(words[k:k + self.chunk_words]))
-                owner.append(i)
-        e = self.model.encode(chunks, batch_size=64, normalize_embeddings=True, show_progress_bar=False)
-        owner = np.array(owner)
-        out = np.stack([e[owner == i].mean(axis=0) for i in range(len(texts))])
+            c = self.chunks(t)
+            self.chunked_texts += len(c) > 1
+            chunks += c
+            owner += [i] * len(c)
+        vecs, lens = [], []
+        for k in range(0, len(chunks), self.batch_size):
+            b = self.tok(chunks[k:k + self.batch_size], padding=True, truncation=False, return_tensors="pt").to(self.device)
+            if b["input_ids"].shape[1] > self.max_tokens:
+                raise ValueError("chunk exceeds the window")  # never truncate silently
+            with torch.no_grad():
+                h = self.model(**b).last_hidden_state
+            m = b["attention_mask"].unsqueeze(-1).float()
+            vecs.append(torch.nn.functional.normalize((h * m).sum(1) / m.sum(1), dim=-1).cpu().numpy())
+            lens += b["attention_mask"].sum(1).tolist()
+        v, n, owner = np.concatenate(vecs), np.array(lens, float), np.array(owner)
+        out = np.stack([(v[owner == i] * n[owner == i, None]).sum(0) for i in range(len(texts))])
         return out / np.linalg.norm(out, axis=1, keepdims=True)
 
 
@@ -216,8 +267,11 @@ def _depths(doc) -> np.ndarray:
     return depth
 
 
-def style_features(doc, function_words: list[str], pos_tags: list[str]) -> dict:
-    """Dense stylometric features of one spaCy doc (all rates per token, so length-normalized)."""
+def style_features(doc, function_words: list[str], pos_tags: list[str], dep_labels: list[str] = (),
+                   mfw: list[str] = ()) -> dict:
+    """Dense stylometric features of one spaCy doc (all rates per token, so length-normalized).
+    deplab_* (dependency-label rates) and mfw_* (most-frequent-word rates, for Burrows' Delta) feed the
+    distance metrics ported from Samer's pipeline."""
     toks = [t for t in doc if not t.is_space]
     n = max(len(toks), 1)
     words = [t.text.lower() for t in toks if t.is_alpha]
@@ -238,6 +292,11 @@ def style_features(doc, function_words: list[str], pos_tags: list[str]) -> dict:
     pos = pd.Series([t.pos_ for t in toks]).value_counts() if toks else pd.Series(dtype=float)
     for p in pos_tags:
         feats[f"pos_{p}"] = pos.get(p, 0) / n
+    dep = pd.Series([t.dep_ for t in toks]).value_counts() if toks else pd.Series(dtype=float)
+    for d in dep_labels:
+        feats[f"deplab_{d}"] = dep.get(d, 0) / n
+    for w in mfw:
+        feats[f"mfw_{w}"] = counts.get(w, 0) / n
     return feats
 
 
@@ -279,14 +338,14 @@ def chain_jobs(sample: pd.DataFrame, texts: pd.Series, variants: list[str], id_c
 
 def score_semantic(jobs, cache_path: Path, id_cols: list[str], device: str = "auto", flush_every: int = 50,
                    log_every: int = 200) -> pd.DataFrame:
-    """BERTScore (P/R/F) and chunked sentence-embedding cosine for every pair; appends to a parquet cache
+    """Rescaled BERTScore (P/R/F1) and MPNet cosine for every pair; appends to a parquet cache
     every `flush_every` jobs and skips jobs already cached, so an interrupted run resumes."""
     import time
 
     cache_path = Path(cache_path)
     done = pd.read_parquet(cache_path) if cache_path.exists() else pd.DataFrame()
     done_ids = set(map(tuple, done[id_cols].drop_duplicates().to_numpy())) if len(done) else set()
-    bs, sb = LongBertScore(device), ChunkedSentenceEmbedder(device=device)
+    bs, sb = LongBertScore(device), SentenceChunkEmbedder(device=device)
     rows, n_jobs, started = [], 0, time.time()
 
     def flush():
@@ -301,7 +360,7 @@ def score_semantic(jobs, cache_path: Path, id_cols: list[str], device: str = "au
             continue
         be, se = bs.embed(tx), sb.embed(tx)
         for r, h, pm in prs:
-            rows.append({**meta, **pm, **bs.score(be[h], be[r]), "sbert_cos": float(se[h] @ se[r])})
+            rows.append({**meta, **pm, **bs.score(be[h], be[r]), "mpnet_cosine": float(se[h] @ se[r])})
         n_jobs += 1
         if n_jobs % flush_every == 0:
             flush()
@@ -309,7 +368,7 @@ def score_semantic(jobs, cache_path: Path, id_cols: list[str], device: str = "au
             print(f"{n_jobs} jobs, {time.time() - started:.0f}s", flush=True)
     flush()
     print(f"semantic scoring done: {n_jobs} new jobs, {len(done):,} rows, {time.time() - started:.0f}s; "
-          f"long texts windowed: {bs.truncation_avoided}", flush=True)
+          f"long texts windowed (BERTScore): {bs.truncation_avoided}, chunked (MPNet): {sb.chunked_texts}", flush=True)
     return done
 
 
@@ -331,6 +390,12 @@ def reference_subset(reference: pd.DataFrame, n_per_dataset: int, seed: int) -> 
             .apply(lambda d: d.sample(n_per_dataset, random_state=seed)).reset_index(drop=True))
 
 
+def top_words(texts, n: int = 150) -> list[str]:
+    """The n most frequent lowercase alphabetic words (Burrows' Delta vocabulary), fitted on reference texts."""
+    words = pd.Series([w.lower() for t in texts for w in WORD.findall(t)])
+    return list(words.value_counts().index[:n])
+
+
 def top_function_words(texts, n: int = 100) -> list[str]:
     from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
@@ -338,14 +403,16 @@ def top_function_words(texts, n: int = 100) -> list[str]:
     return list(words[words.isin(ENGLISH_STOP_WORDS)].value_counts().index[:n])
 
 
-def extract_style(texts: list[str], function_words: list[str], n_process: int = 1) -> pd.DataFrame:
+def extract_style(texts: list[str], function_words: list[str], mfw: list[str], n_process: int = 1) -> pd.DataFrame:
     """spaCy parse + style_features for each text; returns one row per text with its `text_hash`.
     Use n_process > 1 only from a script with a __main__ guard (it deadlocks inside Jupyter on macOS)."""
     import spacy
 
     nlp = spacy.load("en_core_web_sm", disable=["ner", "lemmatizer"])
     nlp.max_length = 2_000_000
-    rows = [style_features(doc, function_words, UPOS) for doc in nlp.pipe(texts, batch_size=64, n_process=n_process)]
+    dep_labels = sorted(nlp.get_pipe("parser").labels)
+    rows = [style_features(doc, function_words, UPOS, dep_labels, mfw)
+            for doc in nlp.pipe(texts, batch_size=64, n_process=n_process)]
     return pd.DataFrame(rows).assign(text_hash=[text_hash(t) for t in texts])
 
 
@@ -398,3 +465,123 @@ def score_lexical_chunked(pairs: pd.DataFrame, out_path: Path, workers: int = 6,
     assert len(lex) == len(pairs), "lexical parts don't cover all pairs"
     lex.to_parquet(out_path, index=False)
     return lex
+
+
+# -- combined style score (union of both team pipelines) -----------------------------------------
+
+# Components grouped by what they measure. The combined `style` is the mean of the family scores, each
+# the mean of its components on the retained scale, so overlapping measures (e.g. two function-word
+# metrics) don't get double weight and 100 function-word dimensions can't drown out 6 surface features.
+STYLE_FAMILIES = {
+    "surface": ["style_surface"],
+    "punctuation": ["style_punctuation", "punct_l1"],
+    "function_words": ["style_function_words", "fw_cosine", "burrows_delta"],
+    "syntax": ["style_syntax_pos", "pos_jsd", "dep_jsd"],
+    "character": ["style_charngram", "char3_cosine"],
+}
+STYLE_COMPONENTS = [c for cs in STYLE_FAMILIES.values() for c in cs]
+DISTANCES = {"punct_l1", "pos_jsd", "dep_jsd", "burrows_delta"}  # 0 = identical; every other metric: 1 = identical
+SURFACE = ["sent_len_mean", "sent_len_sd", "word_len_mean", "mattr", "cap_rate", "dep_depth_mean"]
+
+
+def _rowcos(x: np.ndarray, y: np.ndarray) -> np.ndarray:
+    nx, ny = np.linalg.norm(x, axis=1), np.linalg.norm(y, axis=1)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        return np.where((nx > 0) & (ny > 0), (x * y).sum(1) / (nx * ny), np.nan)
+
+
+def _rowjsd(p: np.ndarray, q: np.ndarray) -> np.ndarray:
+    """Jensen-Shannon divergence (log2, 0-1) per row; NaN where either distribution is empty."""
+    sp, sq = p.sum(1, keepdims=True), q.sum(1, keepdims=True)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        p, q = p / sp, q / sq
+        m = (p + q) / 2
+        kl = lambda a: np.where(a > 0, a * np.log2(a / m), 0).sum(1)
+        out = (kl(p) + kl(q)) / 2
+    return np.where((sp[:, 0] > 0) & (sq[:, 0] > 0), out, np.nan)
+
+
+class StyleScorer:
+    """Per-pair style components. Everything that needs fitting (z-scores, Burrows' Delta means/SDs, the char
+    n-gram TF-IDF vocabulary) is fitted on held-out reference texts, so no rewritten output shapes the measure.
+
+    Block cosines (z-scored features): style_surface, style_punctuation, style_function_words, style_syntax_pos.
+    Char n-grams: style_charngram (char_wb 2-4 TF-IDF cosine), char3_cosine (raw char 3-gram cosine, hashed).
+    Distances: punct_l1 (L1 of punctuation rates), pos_jsd / dep_jsd (Jensen-Shannon divergence of UPOS /
+    dependency-label distributions), burrows_delta (mean |z| difference over the reference's most frequent words).
+    """
+
+    def __init__(self, feats: pd.DataFrame, ref_texts: list[str]):
+        from sklearn.feature_extraction.text import HashingVectorizer, TfidfVectorizer
+
+        self.feats = feats.drop_duplicates("text_hash").set_index("text_hash")
+        cols = list(self.feats.columns)
+        ref = self.feats.loc[[text_hash(t) for t in ref_texts]]
+        self.mu, self.sd = ref.mean(), ref.std().replace(0, np.nan)
+        self.blocks = {
+            "style_surface": SURFACE,
+            "style_punctuation": [c for c in cols if c.startswith("punct_")],
+            "style_function_words": [c for c in cols if c.startswith("fw_")],
+            "style_syntax_pos": [c for c in cols if c.startswith("pos_")],
+        }
+        self.dep = [c for c in cols if c.startswith("deplab_")]
+        self.mfw = [c for c in cols if c.startswith("mfw_")]
+        assert self.dep and self.mfw, "style features predate the v2 standard; re-run scripts/style_features.py"
+        self.charwb = TfidfVectorizer(analyzer="char_wb", ngram_range=(2, 4), min_df=3, sublinear_tf=True).fit(ref_texts)
+        self.char3 = HashingVectorizer(analyzer="char", ngram_range=(3, 3), n_features=2**22, alternate_sign=False,
+                                       norm="l2", preprocessor=lambda t: re.sub(r"\s+", " ", t.lower()))
+
+    def score(self, ref: pd.Series, hyp: pd.Series, chunk: int = 20_000) -> pd.DataFrame:
+        parts = []
+        for s in range(0, len(ref), chunk):
+            r, h = ref.iloc[s:s + chunk], hyp.iloc[s:s + chunk]
+            fr = self.feats.loc[[text_hash(t) for t in r]]
+            fh = self.feats.loc[[text_hash(t) for t in h]]
+            z = lambda f, c: ((f[c] - self.mu[c]) / self.sd[c]).fillna(0).to_numpy()
+            out = {k: _rowcos(z(fr, c), z(fh, c)) for k, c in self.blocks.items()}
+            pu = self.blocks["style_punctuation"]
+            out["punct_l1"] = np.abs(fr[pu].to_numpy() - fh[pu].to_numpy()).sum(1)
+            out["fw_cosine"] = _rowcos(fr[self.blocks["style_function_words"]].to_numpy(),
+                                       fh[self.blocks["style_function_words"]].to_numpy())
+            out["pos_jsd"] = _rowjsd(fr[self.blocks["style_syntax_pos"]].to_numpy(),
+                                     fh[self.blocks["style_syntax_pos"]].to_numpy())
+            out["dep_jsd"] = _rowjsd(fr[self.dep].to_numpy(), fh[self.dep].to_numpy())
+            zr = ((fr[self.mfw] - self.mu[self.mfw]) / self.sd[self.mfw]).to_numpy()
+            zh = ((fh[self.mfw] - self.mu[self.mfw]) / self.sd[self.mfw]).to_numpy()
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", RuntimeWarning)
+                out["burrows_delta"] = np.nanmean(np.abs(zr - zh), axis=1)
+            dot = lambda v: np.asarray(v.transform(r).multiply(v.transform(h)).sum(axis=1)).ravel()
+            out["style_charngram"], out["char3_cosine"] = dot(self.charwb), dot(self.char3)
+            parts.append(pd.DataFrame(out))
+        return pd.concat(parts, ignore_index=True)[STYLE_COMPONENTS]
+
+
+# -- retained scale and floors -------------------------------------------------------------------
+
+def retained(score, floor, metric: str):
+    """1 = identical to T0, 0 = no closer than an unrelated T0 text of the same dataset.
+    Similarities: (s - floor) / (1 - floor). Distances (DISTANCES): (floor - s) / floor."""
+    return (floor - score) / floor if metric in DISTANCES else (score - floor) / (1 - floor)
+
+
+def add_style_composite(df: pd.DataFrame) -> pd.DataFrame:
+    """Family scores (style_fam_*) and the combined `style_ret` from the components' *_ret columns."""
+    for fam, comps in STYLE_FAMILIES.items():
+        df[f"style_fam_{fam}_ret"] = df[[f"{c}_ret" for c in comps]].mean(axis=1)
+    df["style_ret"] = df[[f"style_fam_{f}_ret" for f in STYLE_FAMILIES]].mean(axis=1)
+    return df
+
+
+def t0_floor_pairs(corpus: pd.DataFrame, n_per_dataset: int = 200, seed: int = 6120) -> pd.DataFrame:
+    """Unrelated T0 pairs: two originals of the same dataset from different keys (so different articles)."""
+    rng = np.random.default_rng([seed, 32])
+    rows = []
+    for ds, part in corpus[corpus["round"] == 0].groupby("dataset"):
+        part, n = part.reset_index(drop=True), 0
+        while n < n_per_dataset:
+            i, j = rng.choice(len(part), 2, replace=False)
+            if part.key[i] != part.key[j]:
+                rows.append({"dataset": ds, "ref": part.text[i], "hyp": part.text[j]})
+                n += 1
+    return pd.DataFrame(rows).assign(floor_id=lambda d: range(len(d)))

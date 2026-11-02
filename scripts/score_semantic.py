@@ -1,4 +1,4 @@
-"""Background runner for the notebook's semantic scoring (BERTScore + sentence-embedding cosine).
+"""Background runner for the notebook's semantic scoring (rescaled BERTScore + length-weighted MPNet cosine).
 
 Same functions as notebooks/sot_analysis.ipynb §3; writes the same resumable caches, so the notebook
 just loads them. Usage: python scripts/score_semantic.py
@@ -17,7 +17,7 @@ sample = pd.read_parquet(D / "sot_sample.parquet")
 floors = pd.read_parquet(D / "sot_floors.parquet")
 texts = load_corpus(cfg["paths"]["sot"]).set_index(ID + ["variant", "round"]).text
 
-score_semantic(chain_jobs(sample, texts, VARIANTS, ID), D / "sot_pairs_semantic.parquet", ID)
+score_semantic(chain_jobs(sample, texts, VARIANTS, ID), D / "sot_pairs_semantic_v2.parquet", ID)
 floor_jobs = ((({"dataset": r.dataset, "floor_id": r.floor_id}), [r.ref, r.hyp], [(0, 1, {"kind": "floor"})])
               for r in floors.itertuples(index=False))
-score_semantic(floor_jobs, D / "sot_floors_semantic.parquet", ["dataset", "floor_id"])
+score_semantic(floor_jobs, D / "sot_floors_semantic_v2.parquet", ["dataset", "floor_id"])
