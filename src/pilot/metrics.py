@@ -18,6 +18,13 @@ DATASETS = ["cmv", "eli5", "sci_gen", "tldr", "wp", "xsum", "yelp"]
 WORD = re.compile(r"[A-Za-z]+(?:'[a-z]+)?")
 
 
+def half_precision(device: str, dtype: str) -> bool:
+    """fp16 weights only on CUDA and only when asked for; fp32 is the reference (bit-comparable across machines)."""
+    if dtype not in ("fp32", "fp16"):
+        raise ValueError(f"dtype must be 'fp32' or 'fp16', not {dtype!r}")
+    return dtype == "fp16" and device == "cuda"
+
+
 def best_device(device: str = "auto") -> str:
     """'auto' -> cuda (e.g. Explorer GPU nodes), else mps (Apple silicon), else cpu."""
     if device != "auto":
@@ -89,7 +96,7 @@ class LongBertScore:
     """
 
     def __init__(self, device: str = "auto", model_type: str = "roberta-large", layer: int = 17,
-                 window: int = 510, step: int = 384):
+                 window: int = 510, step: int = 384, dtype: str = "fp32", batch_size: int = 16):
         import bert_score
         import torch
         from transformers import AutoModel, AutoTokenizer
@@ -99,7 +106,9 @@ class LongBertScore:
         self.tok = AutoTokenizer.from_pretrained(model_type)
         model = AutoModel.from_pretrained(model_type)
         model.encoder.layer = model.encoder.layer[:layer]  # bert_score truncates the encoder at `layer`
-        self.model = model.to(device).eval()
+        self.half = half_precision(device, dtype)
+        self.model = (model.half() if self.half else model).to(device).eval()
+        self.batch_size = batch_size
         self.window, self.step, self.margin = window, step, (window - step) // 2
         base = Path(bert_score.__file__).parent / f"rescale_baseline/en/{model_type}.tsv"
         row = pd.read_csv(base).set_index("LAYER").loc[layer]
@@ -116,37 +125,40 @@ class LongBertScore:
             out.append((a, b, c, d))
         return out
 
-    def embed(self, texts: list[str], batch_size: int = 16) -> list:
-        """Unit-normalized layer embeddings per token (special tokens excluded), one tensor per text."""
+    def embed(self, texts: list[str], batch_size: int | None = None) -> list:
+        """Unit-normalized layer embeddings per token (special tokens excluded), one fp32 tensor per text.
+        Windows are batched in length order, so little compute goes to padding."""
         torch = self.torch
-        pieces = []  # (text index, window ids, core slice within window)
+        batch_size = batch_size or self.batch_size
+        pieces = []  # (text index, window index, window ids, core slice within window)
         # Same tokenization as bert_score.utils.sent_encode for RoBERTa: stripped, with a prefix space.
         all_ids = [self.tok(t.strip(), add_special_tokens=False, add_prefix_space=True)["input_ids"] for t in texts]
         for i, ids in enumerate(all_ids):
             wins = self._windows(len(ids))
             if len(wins) > 1:
                 self.truncation_avoided += 1
-            for a, b, c, d in wins:
-                pieces.append((i, ids[a:b], c - a, d - a))
-        parts = {i: [] for i in range(len(texts))}
+            for j, (a, b, c, d) in enumerate(wins):
+                pieces.append((i, j, ids[a:b], c - a, d - a))
+        pieces.sort(key=lambda x: len(x[2]))
+        parts = {i: {} for i in range(len(texts))}
         cls, sep, pad = self.tok.cls_token_id, self.tok.sep_token_id, self.tok.pad_token_id
         for k in range(0, len(pieces), batch_size):
             batch = pieces[k:k + batch_size]
-            seqs = [[cls] + w + [sep] for _, w, _, _ in batch]
+            seqs = [[cls] + w + [sep] for _, _, w, _, _ in batch]
             L = max(len(s) for s in seqs)
             ids = torch.tensor([s + [pad] * (L - len(s)) for s in seqs], device=self.device)
             mask = torch.tensor([[1] * len(s) + [0] * (L - len(s)) for s in seqs], device=self.device)
             with torch.no_grad():
-                h = self.model(input_ids=ids, attention_mask=mask).last_hidden_state
+                h = self.model(input_ids=ids, attention_mask=mask).last_hidden_state.float()
             lens = mask.sum(dim=1)
-            for (i, _, c, d), hi, n in zip(batch, h, lens):
-                parts[i].append((hi[0], hi[1 + c:1 + d], hi[n - 1]))  # (<s>, core tokens, </s>)
+            for (i, j, _, c, d), hi, n in zip(batch, h, lens):
+                parts[i][j] = (hi[0], hi[1 + c:1 + d], hi[n - 1])  # (<s>, core tokens, </s>)
         out = []
         for i in range(len(texts)):
             # Rows: <s> of the first window, every token, </s> of the last window. bert_score keeps the
             # special tokens as match targets (zero weight only on the averaging side), so do we.
-            first, last = parts[i][0][0], parts[i][-1][2]
-            e = torch.cat([first[None], *[core for _, core, _ in parts[i]], last[None]])
+            wins = [parts[i][j] for j in sorted(parts[i])]
+            e = torch.cat([wins[0][0][None], *[core for _, core, _ in wins], wins[-1][2][None]])
             out.append(torch.nn.functional.normalize(e, dim=-1))
         return out
 
@@ -172,14 +184,16 @@ class SentenceChunkEmbedder:
     re-normalized. A text that fits one window gets the standard single-pass embedding. Nothing is truncated."""
 
     def __init__(self, model_name: str = "sentence-transformers/all-mpnet-base-v2", max_tokens: int = 384,
-                 device: str = "auto", batch_size: int = 16):
+                 device: str = "auto", batch_size: int = 16, dtype: str = "fp32"):
         import torch
         from transformers import AutoModel, AutoTokenizer
 
         self.torch = torch
         self.tok = AutoTokenizer.from_pretrained(model_name)
         self.device = best_device(device)
-        self.model = AutoModel.from_pretrained(model_name).to(self.device).eval()
+        self.half = half_precision(self.device, dtype)
+        model = AutoModel.from_pretrained(model_name)
+        self.model = (model.half() if self.half else model).to(self.device).eval()
         self.max_tokens, self.batch_size = max_tokens, batch_size
         self.chunked_texts = 0
 
@@ -219,17 +233,19 @@ class SentenceChunkEmbedder:
             self.chunked_texts += len(c) > 1
             chunks += c
             owner += [i] * len(c)
-        vecs, lens = [], []
-        for k in range(0, len(chunks), self.batch_size):
-            b = self.tok(chunks[k:k + self.batch_size], padding=True, truncation=False, return_tensors="pt").to(self.device)
+        order = sorted(range(len(chunks)), key=lambda k: len(chunks[k]))  # length-sorted batches: less padding
+        v, n = np.zeros((len(chunks), self.model.config.hidden_size)), np.zeros(len(chunks))
+        for k in range(0, len(order), self.batch_size):
+            idx = order[k:k + self.batch_size]
+            b = self.tok([chunks[i] for i in idx], padding=True, truncation=False, return_tensors="pt").to(self.device)
             if b["input_ids"].shape[1] > self.max_tokens:
                 raise ValueError("chunk exceeds the window")  # never truncate silently
             with torch.no_grad():
-                h = self.model(**b).last_hidden_state
+                h = self.model(**b).last_hidden_state.float()
             m = b["attention_mask"].unsqueeze(-1).float()
-            vecs.append(torch.nn.functional.normalize((h * m).sum(1) / m.sum(1), dim=-1).cpu().numpy())
-            lens += b["attention_mask"].sum(1).tolist()
-        v, n, owner = np.concatenate(vecs), np.array(lens, float), np.array(owner)
+            v[idx] = torch.nn.functional.normalize((h * m).sum(1) / m.sum(1), dim=-1).cpu().numpy()
+            n[idx] = b["attention_mask"].sum(1).cpu().numpy()
+        owner = np.array(owner)
         out = np.stack([(v[owner == i] * n[owner == i, None]).sum(0) for i in range(len(texts))])
         return out / np.linalg.norm(out, axis=1, keepdims=True)
 
@@ -337,35 +353,54 @@ def chain_jobs(sample: pd.DataFrame, texts: pd.Series, variants: list[str], id_c
 
 
 def score_semantic(jobs, cache_path: Path, id_cols: list[str], device: str = "auto", flush_every: int = 50,
-                   log_every: int = 200) -> pd.DataFrame:
+                   log_every: int = 200, dtype: str = "fp32", jobs_per_batch: int = 1, batch_size: int = 16) -> pd.DataFrame:
     """Rescaled BERTScore (P/R/F1) and MPNet cosine for every pair; appends to a parquet cache
-    every `flush_every` jobs and skips jobs already cached, so an interrupted run resumes."""
+    every `flush_every` jobs and skips jobs already cached, so an interrupted run resumes.
+    On a large GPU, raise `jobs_per_batch` (texts of many jobs embedded together) and `batch_size`;
+    `dtype="fp16"` halves the weights on CUDA (validate against fp32 first)."""
     import time
 
     cache_path = Path(cache_path)
     done = pd.read_parquet(cache_path) if cache_path.exists() else pd.DataFrame()
     done_ids = set(map(tuple, done[id_cols].drop_duplicates().to_numpy())) if len(done) else set()
-    bs, sb = LongBertScore(device), SentenceChunkEmbedder(device=device)
-    rows, n_jobs, started = [], 0, time.time()
+    bs = LongBertScore(device, dtype=dtype, batch_size=batch_size)
+    sb = SentenceChunkEmbedder(device=device, dtype=dtype, batch_size=batch_size)
+    rows, n_jobs, started, group = [], 0, time.time(), []
 
     def flush():
         nonlocal done, rows
         if rows:
             done = pd.concat([done, pd.DataFrame(rows)], ignore_index=True)
-            done.to_parquet(cache_path, index=False)
+            tmp = cache_path.with_suffix(".tmp.parquet")
+            done.to_parquet(tmp, index=False)
+            tmp.replace(cache_path)  # atomic: a disconnect mid-write never corrupts the cache
             rows = []
 
-    for meta, tx, prs in jobs:
-        if tuple(meta[c] for c in id_cols) in done_ids:
+    def run(group):
+        nonlocal n_jobs
+        texts = [t for _, tx, _ in group for t in tx]
+        be, se = bs.embed(texts), sb.embed(texts)
+        off = 0
+        for meta, tx, prs in group:
+            for r, h, pm in prs:
+                rows.append({**meta, **pm, **bs.score(be[off + h], be[off + r]),
+                             "mpnet_cosine": float(se[off + h] @ se[off + r])})
+            off += len(tx)
+            n_jobs += 1
+            if n_jobs % flush_every == 0:
+                flush()
+            if n_jobs % log_every == 0:
+                print(f"{n_jobs} jobs, {time.time() - started:.0f}s", flush=True)
+
+    for job in jobs:
+        if tuple(job[0][c] for c in id_cols) in done_ids:
             continue
-        be, se = bs.embed(tx), sb.embed(tx)
-        for r, h, pm in prs:
-            rows.append({**meta, **pm, **bs.score(be[h], be[r]), "mpnet_cosine": float(se[h] @ se[r])})
-        n_jobs += 1
-        if n_jobs % flush_every == 0:
-            flush()
-        if n_jobs % log_every == 0:
-            print(f"{n_jobs} jobs, {time.time() - started:.0f}s", flush=True)
+        group.append(job)
+        if len(group) >= jobs_per_batch:
+            run(group)
+            group = []
+    if group:
+        run(group)
     flush()
     print(f"semantic scoring done: {n_jobs} new jobs, {len(done):,} rows, {time.time() - started:.0f}s; "
           f"long texts windowed (BERTScore): {bs.truncation_avoided}, chunked (MPNet): {sb.chunked_texts}", flush=True)

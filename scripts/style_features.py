@@ -4,6 +4,7 @@ and the function-word and most-frequent-word lists (fitted on reference texts) t
 Usage: python scripts/style_features.py
 """
 import json
+import os
 import time
 
 import pandas as pd
@@ -34,7 +35,7 @@ if __name__ == "__main__":
     print(f"{len(texts):,} texts needed, {len(texts) - len(todo):,} cached, {len(todo):,} to parse", flush=True)
     started = time.time()
     if todo:
-        feats = pd.concat([done, extract_style(todo, fw, mfw, n_process=6)], ignore_index=True)
+        feats = pd.concat([done, extract_style(todo, fw, mfw, n_process=max(1, (os.cpu_count() or 4) - 2))], ignore_index=True)
         feats.to_parquet(cache, index=False)
     (D / "sot_style_vocab.json").write_text(json.dumps({"function_words": fw, "mfw": mfw}))
     print(f"style features for {len(todo):,} new texts in {time.time() - started:.0f}s", flush=True)
