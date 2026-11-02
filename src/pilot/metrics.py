@@ -184,7 +184,7 @@ class SentenceChunkEmbedder:
     re-normalized. A text that fits one window gets the standard single-pass embedding. Nothing is truncated."""
 
     def __init__(self, model_name: str = "sentence-transformers/all-mpnet-base-v2", max_tokens: int = 384,
-                 device: str = "auto", batch_size: int = 16, dtype: str = "fp32"):
+                 device: str = "auto", batch_size: int = 16, dtype: str = "fp32", prefix: str = ""):
         import torch
         from transformers import AutoModel, AutoTokenizer
 
@@ -194,12 +194,12 @@ class SentenceChunkEmbedder:
         self.half = half_precision(self.device, dtype)
         model = AutoModel.from_pretrained(model_name)
         self.model = (model.half() if self.half else model).to(self.device).eval()
-        self.max_tokens, self.batch_size = max_tokens, batch_size
+        self.max_tokens, self.batch_size, self.prefix = max_tokens, batch_size, prefix
         self.chunked_texts = 0
         self.split_words = 0  # over-long single words split by characters (see chunks)
 
     def _len(self, s: str) -> int:
-        return len(self.tok(s, add_special_tokens=True)["input_ids"])
+        return len(self.tok(self.prefix + s, add_special_tokens=True)["input_ids"])
 
     def chunks(self, text: str) -> list[str]:
         def fit(parts):
@@ -243,7 +243,8 @@ class SentenceChunkEmbedder:
         v, n = np.zeros((len(chunks), self.model.config.hidden_size)), np.zeros(len(chunks))
         for k in range(0, len(order), self.batch_size):
             idx = order[k:k + self.batch_size]
-            b = self.tok([chunks[i] for i in idx], padding=True, truncation=False, return_tensors="pt").to(self.device)
+            b = self.tok([self.prefix + chunks[i] for i in idx], padding=True, truncation=False,
+                         return_tensors="pt").to(self.device)
             if b["input_ids"].shape[1] > self.max_tokens:
                 raise ValueError("chunk exceeds the window")  # never truncate silently
             with torch.no_grad():
@@ -479,7 +480,8 @@ def build_pairs(corpus: pd.DataFrame, sample: pd.DataFrame, variants: list[str])
     return pairs
 
 
-def score_lexical_chunked(pairs: pd.DataFrame, out_path: Path, workers: int = 6, chunk: int = 20_000) -> pd.DataFrame:
+def score_lexical_chunked(pairs: pd.DataFrame, out_path: Path, workers: int = 6, chunk: int = 20_000,
+                          fn=None) -> pd.DataFrame:
     """Lexical scores in bounded-memory chunks (pool.map pickles every task up front, so feeding it 500k+
     text pairs at once exhausts memory). Each chunk is saved to a parts folder, so the run resumes."""
     import time
@@ -491,7 +493,7 @@ def score_lexical_chunked(pairs: pd.DataFrame, out_path: Path, workers: int = 6,
     out_path = Path(out_path)
     parts_dir = out_path.with_suffix(".parts")
     parts_dir.mkdir(exist_ok=True)
-    fn = partial(lexical_scores, stopwords=frozenset(ENGLISH_STOP_WORDS))
+    fn = fn or partial(lexical_scores, stopwords=frozenset(ENGLISH_STOP_WORDS))
     started = time.time()
     with ProcessPoolExecutor(max_workers=workers) as pool:
         for i, start in enumerate(range(0, len(pairs), chunk)):
@@ -521,7 +523,7 @@ STYLE_FAMILIES = {
     "character": ["style_charngram", "char3_cosine"],
 }
 STYLE_COMPONENTS = [c for cs in STYLE_FAMILIES.values() for c in cs]
-DISTANCES = {"punct_l1", "pos_jsd", "dep_jsd", "burrows_delta"}  # 0 = identical; every other metric: 1 = identical
+DISTANCES = {"punct_l1", "pos_jsd", "dep_jsd", "burrows_delta", "word_edit_rate"}  # 0 = identical; others: 1 = identical
 SURFACE = ["sent_len_mean", "sent_len_sd", "word_len_mean", "mattr", "cap_rate", "dep_depth_mean"]
 
 
@@ -626,3 +628,196 @@ def t0_floor_pairs(corpus: pd.DataFrame, n_per_dataset: int = 200, seed: int = 6
                 rows.append({"dataset": ds, "ref": part.text[i], "hyp": part.text[j]})
                 n += 1
     return pd.DataFrame(rows).assign(floor_id=lambda d: range(len(d)))
+
+
+# -- Samer's extra metrics (ported from sot_research, same definitions) ----------------------------
+
+def extra_lexical_scores(ref: str, hyp: str) -> dict:
+    """chrF (sacrebleu CHRF defaults: char order 6, beta 2) / 100; word edit rate = word-level Levenshtein
+    distance over whitespace tokens / ref words (can exceed 1); exact equality of the stripped texts."""
+    import sacrebleu
+    from rapidfuzz.distance import Levenshtein
+
+    r, h = ref.split(), hyp.split()
+    return {"chrf": sacrebleu.sentence_chrf(hyp, [ref]).score / 100,
+            "word_edit_rate": Levenshtein.distance(r, h) / max(len(r), 1),
+            "exact_equal": float(ref.strip() == hyp.strip())}
+
+
+ENT_LABELS = {"PERSON", "ORG", "GPE", "LOC", "NORP", "FAC", "EVENT", "WORK_OF_ART", "LAW", "PRODUCT"}
+UNITS = {"%", "percent", "per", "million", "billion", "trillion", "thousand", "hundred", "m", "km", "kg", "g",
+         "mph", "kph", "km/h", "ft", "feet", "miles", "mile", "metres", "meters", "metre", "meter", "years", "year",
+         "months", "month", "weeks", "week", "days", "day", "hours", "hour", "minutes", "minute", "seconds",
+         "pounds", "dollars", "euros", "people", "tonnes", "tons", "cm", "mm", "litres", "liters", "bn", "mn", "pm",
+         "am", "st", "nd", "rd", "th"}
+CURRENCY = {"£": "gbp", "$": "usd", "€": "eur"}
+NUMBER = re.compile(r"(?<![\w.])([£$€]?)(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d+))?(?![\d])")
+COVERAGE_THRESHOLD = 0.6  # an original sentence counts as covered when its best MPNet match reaches this
+
+
+def numbers(text: str) -> tuple[list, list]:
+    """Normalized numeric tokens ("11,200" -> "11200", "3.50" -> "3.5") and number+unit quantities."""
+    nums, qty = [], []
+    for m in NUMBER.finditer(text):
+        cur, whole, frac = m.group(1), m.group(2).replace(",", ""), (m.group(3) or "").rstrip("0")
+        n = whole.lstrip("0") or "0"
+        n = f"{n}.{frac}" if frac else n
+        nums.append(n)
+        after = text[m.end():m.end() + 16].lstrip().lower()
+        unit = re.match(r"(%|[a-z/]+)", after)
+        u = unit.group(1) if unit and unit.group(1) in UNITS else ""
+        if cur or u:
+            qty.append(f"{CURRENCY.get(cur, '')}{n}{' ' + u if u else ''}".strip())
+    return nums, qty
+
+
+def norm_entity(s: str) -> str:
+    s = re.sub(r"\s+", " ", s.strip().lower())
+    s = re.sub(r"^(the|a|an) ", "", s)
+    return re.sub(r"('s|’s)$", "", s).strip(" .,'\"’")
+
+
+def extract_info(texts: list[str], n_process: int = 1) -> pd.DataFrame:
+    """Named entities, numbers, quantities and spaCy sentences per text (keyed by text_hash).
+    Use n_process > 1 only from a script with a __main__ guard (it deadlocks inside Jupyter on macOS)."""
+    import json
+
+    import spacy
+
+    nlp = spacy.load("en_core_web_sm", disable=["lemmatizer"])
+    nlp.max_length = 2_000_000
+    rows = []
+    for doc in nlp.pipe(texts, batch_size=64, n_process=n_process):
+        ents = sorted({(norm_entity(e.text), e.label_) for e in doc.ents if e.label_ in ENT_LABELS})
+        nums, qty = numbers(doc.text)
+        sents = [s.text.strip() for s in doc.sents if any(not t.is_space for t in s)]
+        rows.append({"entities_json": json.dumps([e for e in ents if e[0]]), "numbers_json": json.dumps(nums),
+                     "quantities_json": json.dumps(qty), "sentences_json": json.dumps(sents)})
+    return pd.DataFrame(rows).assign(text_hash=[text_hash(t) for t in texts])
+
+
+def information_scores(ref_info: dict, hyp: str, hyp_info: dict) -> dict:
+    """Entity recall (normalized ref entities found verbatim in the hyp), number and quantity recall (clipped
+    multisets), numbers added. HEURISTIC warnings, not validated factual errors (Samer's definitions)."""
+    import json
+    from collections import Counter
+
+    ents = [e for e, _ in json.loads(ref_info["entities_json"])]
+    low = hyp.lower()
+    lost = sum(re.search(r"(?<!\w)" + re.escape(e) + r"(?!\w)", low) is None for e in ents)
+    rn, hn = Counter(json.loads(ref_info["numbers_json"])), Counter(json.loads(hyp_info["numbers_json"]))
+    rq, hq = Counter(json.loads(ref_info["quantities_json"])), Counter(json.loads(hyp_info["quantities_json"]))
+    kept_n, kept_q = sum(min(c, hn[k]) for k, c in rn.items()), sum(min(c, hq[k]) for k, c in rq.items())
+    return {"entities_ref": len(ents), "entities_lost": lost,
+            "entity_recall": 1 - lost / len(ents) if ents else np.nan,
+            "numbers_ref": sum(rn.values()), "numbers_lost": sum(rn.values()) - kept_n,
+            "numbers_added": sum(hn.values()) - kept_n,
+            "number_recall": kept_n / sum(rn.values()) if rn else np.nan,
+            "quantity_recall": kept_q / sum(rq.values()) if rq else np.nan}
+
+
+def _info_worker(args):
+    ref_info, hyp, hyp_info = args
+    return information_scores(ref_info, hyp, hyp_info)
+
+
+def score_information_chunked(pairs: pd.DataFrame, info: pd.DataFrame, out_path: Path, key_cols: list[str],
+                              workers: int = 6, chunk: int = 20_000) -> pd.DataFrame:
+    """Information scores for every pair, chunked and resumable like score_lexical_chunked."""
+    import time
+    from concurrent.futures import ProcessPoolExecutor
+
+    out_path = Path(out_path)
+    parts_dir = out_path.with_suffix(".parts")
+    parts_dir.mkdir(exist_ok=True)
+    cols = ["entities_json", "numbers_json", "quantities_json"]
+    by_hash = info.drop_duplicates("text_hash").set_index("text_hash")[cols]
+    started = time.time()
+    with ProcessPoolExecutor(max_workers=workers) as pool:
+        for i, start in enumerate(range(0, len(pairs), chunk)):
+            part = parts_dir / f"part_{i:04d}.parquet"
+            if part.exists():
+                continue
+            frame = pairs.iloc[start:start + chunk]
+            ri = by_hash.loc[[text_hash(t) for t in frame.ref]].to_dict("records")
+            hi = by_hash.loc[[text_hash(t) for t in frame.hyp]].to_dict("records")
+            rows = list(pool.map(_info_worker, zip(ri, frame.hyp, hi), chunksize=200))
+            pd.concat([frame[key_cols].reset_index(drop=True), pd.DataFrame(rows)], axis=1).to_parquet(part, index=False)
+            print(f"information chunk {i + 1}/{-(-len(pairs) // chunk)} done, {time.time() - started:.0f}s", flush=True)
+    out = pd.concat([pd.read_parquet(p) for p in sorted(parts_dir.glob("part_*.parquet"))], ignore_index=True)
+    assert len(out) == len(pairs), "information parts don't cover all pairs"
+    out.to_parquet(out_path, index=False)
+    return out
+
+
+def coverage(ref_vecs: np.ndarray, hyp_vecs: np.ndarray, threshold: float = COVERAGE_THRESHOLD) -> dict:
+    """Best-match MPNet cosine of each ref sentence in the hyp (and vice versa)."""
+    if not len(ref_vecs) or not len(hyp_vecs):
+        return {"sent_coverage": np.nan, "min_sent_sim": np.nan, "sentences_uncovered": np.nan,
+                "sentences_unsupported": np.nan, "ref_sentences": len(ref_vecs)}
+    S = ref_vecs @ hyp_vecs.T
+    best_r, best_h = S.max(1), S.max(0)
+    return {"sent_coverage": float((best_r >= threshold).mean()), "min_sent_sim": float(best_r.min()),
+            "sentences_uncovered": int((best_r < threshold).sum()),
+            "sentences_unsupported": int((best_h < threshold).sum()), "ref_sentences": len(ref_vecs)}
+
+
+def score_neural_extra(jobs, sentences_of: dict, cache_path: Path, id_cols: list[str], device: str = "auto",
+                       dtype: str = "fp32", jobs_per_batch: int = 1, batch_size: int = 16, flush_every: int = 50,
+                       log_every: int = 200) -> pd.DataFrame:
+    """E5 document cosine (intfloat/e5-base-v2, "query: " prefix, 512-token sentence-packed chunks,
+    token-weighted) and MPNet sentence coverage for every pair. `sentences_of`: text_hash -> spaCy sentences.
+    Resumable like score_semantic."""
+    import time
+
+    cache_path = Path(cache_path)
+    done = pd.read_parquet(cache_path) if cache_path.exists() else pd.DataFrame()
+    done_ids = set(map(tuple, done[id_cols].drop_duplicates().to_numpy())) if len(done) else set()
+    e5 = SentenceChunkEmbedder("intfloat/e5-base-v2", max_tokens=512, prefix="query: ", device=device, dtype=dtype,
+                               batch_size=batch_size)
+    mp = SentenceChunkEmbedder(device=device, dtype=dtype, batch_size=max(batch_size, 64))
+    rows, n_jobs, started, group = [], 0, time.time(), []
+
+    def flush():
+        nonlocal done, rows
+        if rows:
+            done = pd.concat([done, pd.DataFrame(rows)], ignore_index=True)
+            tmp = cache_path.with_suffix(".tmp.parquet")
+            done.to_parquet(tmp, index=False)
+            tmp.replace(cache_path)
+            rows = []
+
+    def run(group):
+        nonlocal n_jobs
+        texts = [t for _, tx, _ in group for t in tx]
+        ve = e5.embed(texts)
+        sents = [sentences_of[text_hash(t)] for t in texts]
+        uniq = list(dict.fromkeys(x for ss in sents for x in ss))
+        sv = dict(zip(uniq, mp.embed(uniq))) if uniq else {}
+        dim = mp.model.config.hidden_size
+        sm = [np.array([sv[x] for x in ss]) if ss else np.zeros((0, dim)) for ss in sents]
+        off = 0
+        for meta, tx, prs in group:
+            for r, h, pm in prs:
+                rows.append({**meta, **pm, "e5_cosine": float(ve[off + h] @ ve[off + r]),
+                             **coverage(sm[off + r], sm[off + h])})
+            off += len(tx)
+            n_jobs += 1
+            if n_jobs % flush_every == 0:
+                flush()
+            if n_jobs % log_every == 0:
+                print(f"{n_jobs} jobs, {time.time() - started:.0f}s", flush=True)
+
+    for job in jobs:
+        if tuple(job[0][c] for c in id_cols) in done_ids:
+            continue
+        group.append(job)
+        if len(group) >= jobs_per_batch:
+            run(group)
+            group = []
+    if group:
+        run(group)
+    flush()
+    print(f"neural extra done: {n_jobs} new jobs, {len(done):,} rows, {time.time() - started:.0f}s; "
+          f"chunked (E5): {e5.chunked_texts}", flush=True)
+    return done

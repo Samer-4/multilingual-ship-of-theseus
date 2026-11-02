@@ -27,6 +27,10 @@ The SoT corpus is not in the repo. `config.yaml` expects an upstream clone at `.
   python scripts/score_lexical.py [scope]   # scope defaults to "full" -> sot_pairs_lexical_<scope>.parquet
   python scripts/score_semantic.py          # rescaled BERTScore + MPNet -> sot_pairs_semantic_v2.parquet, sot_floors_semantic_v2.parquet
   python scripts/style_features.py          # spaCy features keyed by text_hash -> sot_style_features_v2.parquet
+  python scripts/score_extra.py lexical     # chrF, word edit rate, exact equality (CPU)
+  python scripts/info_features.py           # spaCy entities/numbers/sentences -> sot_info_features.parquet, sot_sentences.parquet
+  python scripts/score_extra.py information # entity/number/quantity recall (needs info_features)
+  python scripts/score_neural_extra.py      # E5 cosine + sentence coverage (GPU; notebooks/colab_extra_scoring.ipynb)
   ```
   Semantic scoring takes ~8 h on a laptop; `notebooks/colab_semantic_scoring.ipynb` runs the same script on a Colab GPU (batched across originals, fp16 only if it stays within 0.002 of fp32) with caches on Drive, while style parsing runs locally. Run the scripts with `PYTHONPATH=src` if the active environment has another `pilot` installed (for example the `../cs6120-pilot` venv). Every stage can be resumed: lexical saves chunk files to a `.parts/` folder, semantic skips ids already in its parquet cache, and style skips text hashes it has already processed. To rerun from scratch, delete the cache.
 - **`experiments/{qwen,madlad}_translation/`** and **`Samer/notebooks/`**: self-contained round-trip translation notebooks that do **not** import `pilot`. They ran on remote GPUs (Northeastern Explorer HPC, V100), and the MADLAD notebook builds its own isolated environment. Results go to `results/{qwen,madlad}_translation/` and `Samer/results/`. `Samer/` covers three translators (MADLAD-400-3B, NLLB-200-1.3B, Qwen3-4B) over three round trips on 200 XSum T0 documents, with a matched cohort of 193; see `Samer/SUMMARY.md` for the findings.

@@ -41,6 +41,26 @@ Everything that needs fitting is fitted on **held-out reference texts** (`train_
 never paraphrased): the z-score means and SDs, the function-word and most-frequent-word lists, and the char
 n-gram TF-IDF vocabulary. Fitting on the analysed T0 texts would let the evaluated texts shape the measure.
 
+## Samer's extra metrics (adopted)
+
+Ported from `sot_research` with identical definitions (checked: word edit rate, chrF, number/quantity
+extraction and entity normalization give zero difference on test pairs).
+
+| Metric | Definition | Kind | Computed by |
+|---|---|---|---|
+| `chrf` | sacrebleu CHRF defaults (char order 6, beta 2) / 100 | similarity | `scripts/score_extra.py` (CPU) |
+| `word_edit_rate` | word-level Levenshtein distance over whitespace tokens / ref words (can exceed 1; rapidfuzz) | distance | `scripts/score_extra.py` |
+| `exact_equal` | stripped texts identical; a convergence indicator for step pairs, **not normalized** | share | `scripts/score_extra.py` |
+| `e5_cosine` | `intfloat/e5-base-v2`, "query: " prefix, 512-token sentence-packed chunks, token-weighted mean | similarity | `scripts/score_neural_extra.py` (GPU) |
+| `entity_recall` | share of normalized spaCy entities (PERSON, ORG, GPE, LOC, NORP, FAC, EVENT, WORK_OF_ART, LAW, PRODUCT) found verbatim in the rewrite | similarity | `scripts/info_features.py` + `score_extra.py` |
+| `number_recall`, `quantity_recall` | clipped multiset recall of normalized numbers / number+unit quantities | similarity | same |
+| `sent_coverage` | share of original spaCy sentences whose best MPNet match in the rewrite reaches cosine 0.6 | similarity | `scripts/score_neural_extra.py` |
+
+All except `exact_equal` are reported on the retained scale against the same unrelated-T0 floors. Recalls are
+undefined (NaN) when the original has no entities, numbers or quantities. The content-warning flags
+(`flag_entity_loss`, `flag_number_change`, `flag_sentence_omission`) are raw shares of pairs, as in Samer's RQ1.
+They are **heuristic warnings, not validated factual errors**.
+
 ## Unchanged
 
 - Statistical unit: the original article (`key`). Bootstrap CIs resample articles.
@@ -50,8 +70,6 @@ n-gram TF-IDF vocabulary. Fitting on the analysed T0 texts would let the evaluat
 ## Still open
 
 - Number of bootstrap resamples: 1,000 in `sot_analysis.ipynb`, 2,000 in Samer's RQ1.
-- Whether to add Samer's extra metrics (chrF, E5, word edit rate, exact equality, entity/number/sentence
-  coverage) to the 7-dataset analysis.
 - Samer's `sot_research` package (branch `feature/sam-experiments`) still uses multiset word retention over all
   tokens, raw BERTScore as the headline, and T0-fitted style vocabularies. It needs the same changes before RQ1
   numbers can be pooled with the paraphrase baseline.
