@@ -196,6 +196,7 @@ class SentenceChunkEmbedder:
         self.model = (model.half() if self.half else model).to(self.device).eval()
         self.max_tokens, self.batch_size = max_tokens, batch_size
         self.chunked_texts = 0
+        self.split_words = 0  # over-long single words split by characters (see chunks)
 
     def _len(self, s: str) -> int:
         return len(self.tok(s, add_special_tokens=True)["input_ids"])
@@ -210,7 +211,12 @@ class SentenceChunkEmbedder:
                 return fit(parts[:h]) + fit(parts[h:])
             words = s.split()
             if len(words) <= 1:
-                raise ValueError("a single word exceeds the encoder window")
+                # One whitespace-free run longer than the window (repetition loops such as "f-f-f-...",
+                # ");););..."): halve it by characters. Nothing is dropped; Samer's code raises here instead,
+                # and gives identical results on every text that doesn't reach this branch.
+                self.split_words += 1
+                h = len(s) // 2
+                return fit([s[:h]]) + fit([s[h:]])
             h = len(words) // 2
             return fit([" ".join(words[:h])]) + fit([" ".join(words[h:])])
 
@@ -403,7 +409,7 @@ def score_semantic(jobs, cache_path: Path, id_cols: list[str], device: str = "au
         run(group)
     flush()
     print(f"semantic scoring done: {n_jobs} new jobs, {len(done):,} rows, {time.time() - started:.0f}s; "
-          f"long texts windowed (BERTScore): {bs.truncation_avoided}, chunked (MPNet): {sb.chunked_texts}", flush=True)
+          f"long texts windowed (BERTScore): {bs.truncation_avoided}, chunked (MPNet): {sb.chunked_texts}, over-long words split: {sb.split_words}", flush=True)
     return done
 
 
