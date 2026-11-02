@@ -61,10 +61,11 @@ def article_folds(articles, n_splits: int, seed: int) -> dict:
 
 
 def grouped_cv(train_pool: pd.DataFrame, eval_sets: dict, label: str, model: str, cols=None, n_splits: int = 5,
-               repeats: int = 5, seed: int = 6120,
+               repeats: int = 5, seed: int = 6120, train_filter=None,
                keep=("text_id", "item_id", "article_id", "source_label", "rewriter", "stage")) -> pd.DataFrame:
     """Train on `train_pool` rows of the training articles; predict every eval set's rows of the held-out articles.
-    Returns one row per (repeat, eval set, text) with y_true and y_pred."""
+    Returns one row per (repeat, eval set, text) with y_true and y_pred. train_filter(train_df) may further restrict
+    the training rows (e.g. leave one source out)."""
     out = []
     articles = set(train_pool.article_id)
     for df in eval_sets.values():
@@ -73,6 +74,8 @@ def grouped_cv(train_pool: pd.DataFrame, eval_sets: dict, label: str, model: str
         folds = article_folds(articles, n_splits, seed + r)
         for k in range(n_splits):
             tr = train_pool[train_pool.article_id.map(folds) != k]
+            if train_filter is not None:
+                tr = train_filter(tr)
             kind, est = make_model(model)
             est.fit(tr["text"] if kind == "text" else tr[cols].to_numpy(float), tr[label].to_numpy())
             for name, df in eval_sets.items():

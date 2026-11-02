@@ -31,7 +31,10 @@ FILES = {"samer_pair_metrics.parquet": "Sam/results/research/metrics/pair_metric
          "samer_rq2_predictions.parquet": "Sam/results/research/rq2/predictions.parquet",
          "samer_rq2_splits.csv": "Sam/results/research/rq2/splits.csv",
          "samer_reference_lists.json": "Sam/results/research/shared_features/reference_lists.json",
-         "samer_text_features.parquet": "Sam/results/research/shared_features/text_features.parquet"}
+         "samer_text_features.parquet": "Sam/results/research/shared_features/text_features.parquet",
+         # RQ3 (rewriter fingerprint): his translator-identification predictions and folds
+         "samer_rq3_predictions.parquet": "Sam/results/research/rq3/predictions.parquet",
+         "samer_rq3_splits.csv": "Sam/results/research/rq3/splits.csv"}
 ID = ["dataset", "floor_id"]
 
 if __name__ == "__main__":

@@ -43,6 +43,7 @@ The SoT corpus is not in the repo. `config.yaml` expects an upstream clone next 
   python scripts/import_samer_rq1.py        # Samer's text-free translation pair scores from his branch + agreement check (~3 min) -> notebook §5
   python scripts/import_samer_rq1.py --files-only  # just extract Samer's files (incl. his RQ2 predictions, folds, reference lists)
   python scripts/rq2_attribution.py         # RQ2 source attribution on paraphrases, Samer's protocol (~3 min) -> notebooks/rq2_source_attribution.ipynb
+  python scripts/rq3_fingerprint.py         # RQ3 paraphraser fingerprint, Samer's protocol (~10 min) -> notebooks/rq3_rewriter_fingerprint.ipynb
   python scripts/rq2_full.py [--limit N]    # RQ2 on all 7 datasets (~2 h): Colab via notebooks/colab_rq2_attribution.ipynb (bundle: zip src scripts data/derived/sot_style_vocab.json); --limit N = smoke test
   ```
   Semantic scoring takes ~8 h on a laptop; `notebooks/colab_semantic_scoring.ipynb` runs the same script on a Colab GPU (batched across originals, fp16 only if it stays within 0.002 of fp32) with caches on Drive, while style parsing runs locally. Run the scripts with `PYTHONPATH=src` if the active environment has another `pilot` installed (for example the `../../cs6120-pilot` venv, relative to `Sam/`). Every stage can be resumed: lexical saves chunk files to a `.parts/` folder, semantic skips ids already in its parquet cache, and style skips text hashes it has already processed. To rerun from scratch, delete the cache.
