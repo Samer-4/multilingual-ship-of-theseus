@@ -1,12 +1,12 @@
 # Pilot configuration, v2: translate-then-paraphrase on the Ship of Theseus corpus.
-# Every notebook reads this file through pilot.config.load_config(). Paths are relative to the repo root.
+# Every notebook reads this file through pilot.config.load_config(). Paths are relative to Sam/ (the folder holding src/).
 # Values marked PROVISIONAL are the plan's recommended defaults (docs/pilot_execution_plan.md §9),
 # pending team sign-off. The v1 (MULTITuDE) config is in notebooks/archive/multitude/config_v1.yaml.
 
 seed: 6120
 
 paths:
-  corpus_src: ../Ship_of_theseus_paraphrased_copus   # upstream clone; copied into paths.sot by 01
+  corpus_src: ../../Ship_of_theseus_paraphrased_copus   # upstream clone; copied into paths.sot by 01
   sot: data/sot                                      # read-only local copy of the corpus
   derived: data/derived
   calls: data/calls                                  # append-only JSONL call logs (also the cache)

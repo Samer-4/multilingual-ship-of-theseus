@@ -24,10 +24,11 @@ It measures:
 - Semantic preservation: BERTScore, sentence embedding similarity
 - Stylistic preservation: punctuation, function words, syntax/POS, surface features, and character n-grams
 
-Files:
-- `notebooks/sot_analysis.ipynb`
-- `scripts/`
-- `results/sot_analysis/`
+Files (all under `Sam/`):
+- `Sam/notebooks/sot_analysis.ipynb`
+- `Sam/scripts/` and `Sam/src/pilot/`
+- `Sam/results/sot_analysis/`
+- `Sam/docs/metric_standard.md`
 
 
 ### 2. Qwen Round-Trip Translation
