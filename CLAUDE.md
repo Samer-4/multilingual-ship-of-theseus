@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 CS 6120 (Northeastern) NLP research: does rewriting text through another language (English → Spanish → English round-trip translation) preserve meaning and style differently from English-only paraphrasing? The baseline is the Ship of Theseus (SoT) paraphrased corpus (Tripto et al.): 7 datasets (`cmv, eli5, sci_gen, tldr, wp, xsum, yelp`), rounds T0 (original) through T3, with paraphrasers ChatGPT, PaLM, Pegasus and Dipper. This is research code. There are no tests, linter or CI.
 
+## Where to run compute
+
+**Anything expected to take more than 10 minutes must run on Google Colab (the user has Colab Pro), not locally.** Estimate the runtime first, for example by timing a small `--limit` or sample run. If it's over 10 minutes, write or extend a Colab runner instead of running it on the Mac. Runners keep their caches on Drive so a disconnect only means re-running cells (see `notebooks/colab_semantic_scoring.ipynb` for the pattern). Short checks, smoke tests and assembling results from cached scores stay local.
+
 ## Setup
 
 ```bash
