@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ship of Theseus Results</title>
+<style>
+:root{--surface:#fcfcfb;--card:#ffffff;--ink:#0b0b0b;--ink2:#52514e;--muted:#7a7974;--line:#e4e3df;--track:#f0efec;
+--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s7:#6250d6;--heat:42,120,214;--accent:#2a78d6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--surface:#1a1a19;--card:#222221;--ink:#f0efec;--ink2:#c3c2b7;
+--muted:#8f8e88;--line:#3a3a37;--track:#2d2d2b;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s7:#9085e9;--heat:57,135,229;--accent:#3987e5}}
+:root[data-theme="dark"]{--surface:#1a1a19;--card:#222221;--ink:#f0efec;--ink2:#c3c2b7;--muted:#8f8e88;--line:#3a3a37;
+--track:#2d2d2b;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s7:#9085e9;--heat:57,135,229;--accent:#3987e5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{min-width:0;max-width:980px;margin:0 auto;padding:32px 16px 64px}
+h1{font-size:30px;line-height:1.2;margin:0 0 6px}
+h2{font-size:21px;margin:44px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+h3{font-size:16px;margin:24px 0 6px}
+p,li{color:var(--ink2)} strong{color:var(--ink)}
+.sub{color:var(--muted);margin:0 0 20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:20px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card .k{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.card .h{font-size:17px;font-weight:600;color:var(--ink);margin:4px 0}
+.card p{margin:0;font-size:14px}
+.note{background:var(--card);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.tw{overflow-x:auto;max-width:100%;margin:10px 0 6px}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:600;font-size:12.5px}
+td{color:var(--ink)}
+.hc{background:rgba(var(--heat),calc(var(--a)*.55))}
+.chart{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px 10px;margin:12px 0}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--ink2);margin-bottom:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px}
+.row{display:grid;grid-template-columns:minmax(110px,190px) minmax(0,1fr);gap:10px;align-items:center;padding:4px 0}
+.lab{font-size:13.5px;color:var(--ink)}
+.bars{display:flex;flex-direction:column;gap:2px}
+.bar-line{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:8px;align-items:center;cursor:default}
+.track{height:12px;background:var(--track);border-radius:0 4px 4px 0}
+.bar{height:12px;border-radius:0 4px 4px 0}
+.val{font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.bar-line:hover .bar{filter:brightness(1.1)} .bar-line:hover .val{color:var(--ink)}
+.axis{display:flex;justify-content:space-between;margin-left:calc(min(190px,30%) + 10px);margin-right:52px;font-size:11.5px;color:var(--muted)}
+.s-trans{background:var(--s1)} .s-para{background:var(--s2)} .s-content{background:var(--s3)} .s-style{background:var(--s7)}
+.cap{font-size:13px;color:var(--muted);margin:4px 0 14px}
+code{font-size:13px;background:var(--track);padding:1px 5px;border-radius:4px}
+@media (max-width:560px){.row{grid-template-columns:minmax(0,1fr);gap:2px}.axis{margin-left:0}h1{font-size:25px}}
+</style></head>
+<body>
+<main>
+<h1>Ship of Theseus: rewriting and what survives</h1>
+<p class="sub">CS 6120 · Sam Wong · Ship of Theseus paraphrased corpus (Tripto et al.) · RQ1 decay, RQ2 source attribution, RQ3 rewriter fingerprint</p>
+
+<p>When a text is rewritten three times in a row (T0 → T1 → T2 → T3), how much of its wording, meaning, style and source identity survives?
+And does English → Spanish → English round-trip translation behave differently from English paraphrasing
+(ChatGPT, PaLM, Dipper, Pegasus)?</p>
+
+<div class="cards">
+<div class="card"><div class="k">RQ1 · decay</div><div class="h">Meaning outlasts wording and style</div>
+<p>Most of the loss happens in round 1 (71–90%). Style is lost faster than content for every paraphraser by T3.</p></div>
+<div class="card"><div class="k">RQ1 · translation</div><div class="h">Translation preserves more on every metric</div>
+<p>On the same 178 XSum documents: BERTScore 0.81 vs 0.58 at T3. Translation settles after one round; paraphrase keeps drifting.</p></div>
+<div class="card"><div class="k">RQ2 · attribution</div><div class="h">Paraphrase erases more of the source</div>
+<p>Translators keep 72–85% of the source signal, most paraphrasers 29–55%. ChatGPT relabels 55% of non-OpenAI texts as OpenAI.</p></div>
+<div class="card"><div class="k">RQ3 · fingerprint</div><div class="h">Both families leave one, of different kinds</div>
+<p>Paraphrasers are recognised by style and length, and their fingerprint grows each round. Translators are recognised by wording and characters.</p></div>
+</div>
+
+<h2>Data and method</h2>
+<div class="tw"><table><tbody>
+<tr><td>Corpus</td><td style="text-align:left;white-space:normal">7 datasets (cmv, eli5, sci_gen, tldr, wp, xsum, yelp); 7 sources (Human + 6 LLMs)</td></tr>
+<tr><td>Sample</td><td style="text-align:left;white-space:normal"><strong>16,682 originals</strong> that every paraphraser completed to T3, on 2,996 articles; 583,870 pairs</td></tr>
+<tr><td>Translation set</td><td style="text-align:left;white-space:normal">Samer Ahmed's XSum round trips (MADLAD-400-3B, NLLB-200-1.3B, Qwen3-4B; 3 rounds). Matched set: <strong>178 documents, 31 articles</strong> that every rewriter completed</td></tr>
+<tr><td>Statistical unit</td><td style="text-align:left;white-space:normal">the original article. 95% CIs from an article-cluster bootstrap; classifier folds grouped by article</td></tr>
+<tr><td>Retained scale</td><td style="text-align:left;white-space:normal"><strong>1 = identical to T0, 0 = no closer than an unrelated T0 text from the same dataset</strong> (floor = mean of 200 unrelated T0 pairs per dataset). Similarities: (s − floor)/(1 − floor); distances: (floor − d)/floor</td></tr>
+<tr><td>Validation</td><td style="text-align:left;white-space:normal">Samer's originals are byte-identical to ours; our code reproduces 11 of his per-pair metrics and 100% of his RQ2 T0 predictions</td></tr>
+</tbody></table></div>
+<p class="cap">Hover any bar or heat cell for the exact value and its 95% CI.</p>
+
+<h2>RQ1 · How words, meaning, style and information decay</h2>
+<h3>Retained at T3 (all 7 datasets)</h3>
+<div class="tw"><table class=""><thead><tr><th>Paraphraser</th><th>BLEU</th><th>Word retention</th><th>chrF</th><th>BERTScore F1</th><th>MPNet</th><th>E5</th><th>Style</th></tr></thead><tbody><tr><td>ChatGPT</td><td>0.17</td><td>0.45</td><td>0.35</td><td>0.55</td><td>0.86</td><td>0.81</td><td>0.45</td></tr><tr><td>PaLM</td><td>0.31</td><td>0.52</td><td>0.43</td><td>0.62</td><td>0.85</td><td>0.81</td><td>0.57</td></tr><tr><td>Dipper</td><td>0.07</td><td>0.24</td><td>0.18</td><td>0.37</td><td>0.68</td><td>0.63</td><td>0.36</td></tr><tr><td>Pegasus</td><td>0.26</td><td>0.51</td><td>0.36</td><td>0.53</td><td>0.80</td><td>0.78</td><td>0.47</td></tr></tbody></table></div>
+<p>Wording goes first and meaning stays: embedding similarity (MPNet 0.68–0.86) is far above BLEU (0.07–0.31). PaLM preserves the most
+and Dipper the least. Embedding cosines compress differences that BERTScore and lexical metrics separate.</p>
+
+<h3>Style decays faster than content</h3>
+<div class="chart">
+<div class="legend"><span><i class="sw s-content"></i>Content (BERTScore F1)</span><span><i class="sw s-style"></i>Style (combined)</span></div>
+<div class="row"><div class="lab">ChatGPT</div><div class="bars">
+<div class="bar-line" title="ChatGPT T3 content (BERTScore): 0.552 [0.549, 0.556]"><div class="track"><div class="bar s-content" style="width:55.2%"></div></div><span class="val">0.55</span></div>
+<div class="bar-line" title="ChatGPT T3 style: 0.454 [0.449, 0.459]"><div class="track"><div class="bar s-style" style="width:45.4%"></div></div><span class="val">0.45</span></div>
+</div></div>
+<div class="row"><div class="lab">PaLM</div><div class="bars">
+<div class="bar-line" title="PaLM T3 content (BERTScore): 0.619 [0.613, 0.623]"><div class="track"><div class="bar s-content" style="width:61.9%"></div></div><span class="val">0.62</span></div>
+<div class="bar-line" title="PaLM T3 style: 0.565 [0.559, 0.571]"><div class="track"><div class="bar s-style" style="width:56.5%"></div></div><span class="val">0.57</span></div>
+</div></div>
+<div class="row"><div class="lab">Dipper</div><div class="bars">
+<div class="bar-line" title="Dipper T3 content (BERTScore): 0.369 [0.367, 0.372]"><div class="track"><div class="bar s-content" style="width:36.9%"></div></div><span class="val">0.37</span></div>
+<div class="bar-line" title="Dipper T3 style: 0.356 [0.351, 0.360]"><div class="track"><div class="bar s-style" style="width:35.6%"></div></div><span class="val">0.36</span></div>
+</div></div>
+<div class="row"><div class="lab">Pegasus</div><div class="bars">
+<div class="bar-line" title="Pegasus T3 content (BERTScore): 0.534 [0.530, 0.537]"><div class="track"><div class="bar s-content" style="width:53.4%"></div></div><span class="val">0.53</span></div>
+<div class="bar-line" title="Pegasus T3 style: 0.470 [0.464, 0.477]"><div class="track"><div class="bar s-style" style="width:47.0%"></div></div><span class="val">0.47</span></div>
+</div></div>
+<div class="axis"><span>0</span><span>0.5</span><span>1</span></div></div>
+<p class="cap">Retained at T3, mean over 16,682 originals. Content = baseline-rescaled BERTScore F1; style = combined 11-component score (surface, punctuation, function words, syntax, character n-grams).</p>
+<div class="tw"><table class=""><thead><tr><th>Paraphraser</th><th>Gap T1</th><th>Gap T2</th><th>Gap T3</th><th>T3 95% CI</th></tr></thead><tbody><tr><td>ChatGPT</td><td>+0.086</td><td>+0.087</td><td>+0.099</td><td>[0.095, 0.102]</td></tr><tr><td>PaLM</td><td>+0.033</td><td>+0.048</td><td>+0.053</td><td>[0.050, 0.057]</td></tr><tr><td>Dipper</td><td>-0.008</td><td>+0.009</td><td>+0.014</td><td>[0.010, 0.018]</td></tr><tr><td>Pegasus</td><td>+0.005</td><td>+0.042</td><td>+0.063</td><td>[0.059, 0.068]</td></tr></tbody></table></div>
+<p class="cap">Decay gap = retained content − retained style. Positive means style is lost faster.</p>
+<p>All four T3 gaps exclude zero, and the gap grows over rounds (Pegasus +0.005 at T1 → +0.063 at T3). ChatGPT has the widest gap:
+it keeps meaning but rewrites in its own voice. Punctuation is the most fragile style family for every paraphraser.</p>
+
+<h3>Most of the change happens in round 1</h3>
+<div class="tw"><table class=""><thead><tr><th>Paraphraser</th><th>Round 1 share of T3 loss (chrF)</th><th>Round 1 share (BERTScore)</th></tr></thead><tbody><tr><td>ChatGPT</td><td>90%</td><td>85%</td></tr><tr><td>Dipper</td><td>79%</td><td>78%</td></tr><tr><td>PaLM</td><td>80%</td><td>79%</td></tr><tr><td>Pegasus</td><td>71%</td><td>74%</td></tr></tbody></table></div>
+<p>71–90% of the T3 loss is already present at T1. Dipper is the exception that keeps rewriting about 85% of words every round.</p>
+
+<h3>Round-trip translation vs paraphrase (same 178 XSum documents)</h3>
+<div class="chart">
+<div class="legend"><span><i class="sw s-trans"></i>Round-trip translation (3 models)</span><span><i class="sw s-para"></i>Paraphrase (4 models)</span></div>
+<div class="row"><div class="lab">BLEU</div><div class="bars">
+<div class="bar-line" title="BLEU, translation (3 models) at T3: 0.525"><div class="track"><div class="bar s-trans" style="width:52.5%"></div></div><span class="val">0.53</span></div>
+<div class="bar-line" title="BLEU, paraphrase (4 models) at T3: 0.240"><div class="track"><div class="bar s-para" style="width:24.0%"></div></div><span class="val">0.24</span></div>
+</div></div>
+<div class="row"><div class="lab">chrF</div><div class="bars">
+<div class="bar-line" title="chrF, translation (3 models) at T3: 0.671"><div class="track"><div class="bar s-trans" style="width:67.1%"></div></div><span class="val">0.67</span></div>
+<div class="bar-line" title="chrF, paraphrase (4 models) at T3: 0.383"><div class="track"><div class="bar s-para" style="width:38.3%"></div></div><span class="val">0.38</span></div>
+</div></div>
+<div class="row"><div class="lab">BERTScore F1 (rescaled)</div><div class="bars">
+<div class="bar-line" title="BERTScore F1 (rescaled), translation (3 models) at T3: 0.808"><div class="track"><div class="bar s-trans" style="width:80.8%"></div></div><span class="val">0.81</span></div>
+<div class="bar-line" title="BERTScore F1 (rescaled), paraphrase (4 models) at T3: 0.580"><div class="track"><div class="bar s-para" style="width:58.0%"></div></div><span class="val">0.58</span></div>
+</div></div>
+<div class="row"><div class="lab">MPNet cosine</div><div class="bars">
+<div class="bar-line" title="MPNet cosine, translation (3 models) at T3: 0.949"><div class="track"><div class="bar s-trans" style="width:94.9%"></div></div><span class="val">0.95</span></div>
+<div class="bar-line" title="MPNet cosine, paraphrase (4 models) at T3: 0.850"><div class="track"><div class="bar s-para" style="width:85.0%"></div></div><span class="val">0.85</span></div>
+</div></div>
+<div class="row"><div class="lab">E5 cosine</div><div class="bars">
+<div class="bar-line" title="E5 cosine, translation (3 models) at T3: 0.920"><div class="track"><div class="bar s-trans" style="width:92.0%"></div></div><span class="val">0.92</span></div>
+<div class="bar-line" title="E5 cosine, paraphrase (4 models) at T3: 0.797"><div class="track"><div class="bar s-para" style="width:79.7%"></div></div><span class="val">0.80</span></div>
+</div></div>
+<div class="row"><div class="lab">Entity recall</div><div class="bars">
+<div class="bar-line" title="Entity recall, translation (3 models) at T3: 0.880"><div class="track"><div class="bar s-trans" style="width:88.0%"></div></div><span class="val">0.88</span></div>
+<div class="bar-line" title="Entity recall, paraphrase (4 models) at T3: 0.651"><div class="track"><div class="bar s-para" style="width:65.1%"></div></div><span class="val">0.65</span></div>
+</div></div>
+<div class="row"><div class="lab">Number recall</div><div class="bars">
+<div class="bar-line" title="Number recall, translation (3 models) at T3: 0.877"><div class="track"><div class="bar s-trans" style="width:87.8%"></div></div><span class="val">0.88</span></div>
+<div class="bar-line" title="Number recall, paraphrase (4 models) at T3: 0.521"><div class="track"><div class="bar s-para" style="width:52.1%"></div></div><span class="val">0.52</span></div>
+</div></div>
+<div class="row"><div class="lab">Sentence coverage</div><div class="bars">
+<div class="bar-line" title="Sentence coverage, translation (3 models) at T3: 0.944"><div class="track"><div class="bar s-trans" style="width:94.4%"></div></div><span class="val">0.94</span></div>
+<div class="bar-line" title="Sentence coverage, paraphrase (4 models) at T3: 0.787"><div class="track"><div class="bar s-para" style="width:78.7%"></div></div><span class="val">0.79</span></div>
+</div></div>
+<div class="axis"><span>0</span><span>0.5</span><span>1</span></div></div>
+<p class="cap">Family means of retained scores at T3. Translation = MADLAD, NLLB, Qwen3-4B; paraphrase = ChatGPT, PaLM, Dipper, Pegasus.</p>
+<div class="tw"><table class=""><thead><tr><th>Metric</th><th>Translation</th><th>Paraphrase</th><th>Gap [95% CI]</th><th>Documents</th></tr></thead><tbody><tr><td>BLEU</td><td>0.53</td><td>0.24</td><td>+0.29 [0.27, 0.30]</td><td>178</td></tr><tr><td>chrF</td><td>0.67</td><td>0.38</td><td>+0.29 [0.27, 0.30]</td><td>178</td></tr><tr><td>BERTScore F1 (rescaled)</td><td>0.81</td><td>0.58</td><td>+0.23 [0.22, 0.24]</td><td>178</td></tr><tr><td>MPNet cosine</td><td>0.95</td><td>0.85</td><td>+0.10 [0.09, 0.11]</td><td>178</td></tr><tr><td>E5 cosine</td><td>0.92</td><td>0.80</td><td>+0.12 [0.11, 0.13]</td><td>178</td></tr><tr><td>Entity recall</td><td>0.88</td><td>0.65</td><td>+0.23 [0.19, 0.26]</td><td>174</td></tr><tr><td>Number recall</td><td>0.88</td><td>0.52</td><td>+0.36 [0.32, 0.39]</td><td>148</td></tr><tr><td>Sentence coverage</td><td>0.94</td><td>0.79</td><td>+0.16 [0.13, 0.18]</td><td>178</td></tr></tbody></table></div>
+<p><strong>Translation preserves more on every metric.</strong> The gap is largest for exact wording and numbers, smallest for overall meaning.
+NLLB preserves the most of any rewriter. It isn't a clean split: PaLM (BERTScore 0.76) sits close to Qwen3-4B (0.78).
+After round 1, translators change only 2–10% of words per round, while paraphrasers keep changing 15–42%.</p>
+
+<h2>RQ2 · Can the original source still be identified?</h2>
+<p>A classifier trained only on originals (7 sources, chance macro-F1 0.143) is applied to rewrites. Samer's protocol, ported verbatim.
+The ~30-word opening shared by all sources is removed. <strong>Retained attribution</strong> = (F1 at Tk − chance)/(F1 at T0 − chance).</p>
+
+<h3>Matched XSum: translators vs paraphrasers at T3</h3>
+<div class="chart">
+<div class="legend"><span><i class="sw s-trans"></i>Round-trip translator</span><span><i class="sw s-para"></i>Paraphraser</span></div>
+<div class="row"><div class="lab">NLLB-200-1.3B</div><div class="bars">
+<div class="bar-line" title="NLLB-200-1.3B T3: macro-F1 0.415 [0.352, 0.477], retained 0.85"><div class="track"><div class="bar s-trans" style="width:84.6%"></div></div><span class="val">0.85</span></div>
+</div></div>
+<div class="row"><div class="lab">MADLAD-400-3B</div><div class="bars">
+<div class="bar-line" title="MADLAD-400-3B T3: macro-F1 0.385 [0.326, 0.439], retained 0.75"><div class="track"><div class="bar s-trans" style="width:75.2%"></div></div><span class="val">0.75</span></div>
+</div></div>
+<div class="row"><div class="lab">Pegasus</div><div class="bars">
+<div class="bar-line" title="Pegasus T3: macro-F1 0.381 [0.315, 0.440], retained 0.74"><div class="track"><div class="bar s-para" style="width:74.0%"></div></div><span class="val">0.74</span></div>
+</div></div>
+<div class="row"><div class="lab">Qwen3-4B</div><div class="bars">
+<div class="bar-line" title="Qwen3-4B T3: macro-F1 0.375 [0.314, 0.432], retained 0.72"><div class="track"><div class="bar s-trans" style="width:72.0%"></div></div><span class="val">0.72</span></div>
+</div></div>
+<div class="row"><div class="lab">PaLM</div><div class="bars">
+<div class="bar-line" title="PaLM T3: macro-F1 0.319 [0.273, 0.366], retained 0.55"><div class="track"><div class="bar s-para" style="width:54.9%"></div></div><span class="val">0.55</span></div>
+</div></div>
+<div class="row"><div class="lab">Dipper</div><div class="bars">
+<div class="bar-line" title="Dipper T3: macro-F1 0.285 [0.234, 0.339], retained 0.44"><div class="track"><div class="bar s-para" style="width:44.1%"></div></div><span class="val">0.44</span></div>
+</div></div>
+<div class="row"><div class="lab">ChatGPT</div><div class="bars">
+<div class="bar-line" title="ChatGPT T3: macro-F1 0.236 [0.189, 0.278], retained 0.29"><div class="track"><div class="bar s-para" style="width:28.8%"></div></div><span class="val">0.29</span></div>
+</div></div>
+<div class="axis"><span>0</span><span>0.5</span><span>1</span></div></div>
+<p class="cap">Character n-gram classifier, retained attribution at T3. T0 macro-F1 = 0.46.</p>
+<div class="tw"><table class=""><thead><tr><th>Model</th><th>Translation</th><th>Paraphrase</th><th>Gap [95% CI]</th></tr></thead><tbody><tr><td>Length only</td><td>0.31</td><td>0.26</td><td>+0.05 [0.01, 0.08]</td></tr><tr><td>Stylometric</td><td>0.35</td><td>0.25</td><td>+0.09 [0.06, 0.13]</td></tr><tr><td>Char n-grams</td><td>0.39</td><td>0.31</td><td>+0.08 [0.04, 0.12]</td></tr><tr><td>Word n-grams</td><td>0.38</td><td>0.30</td><td>+0.07 [0.03, 0.12]</td></tr></tbody></table></div>
+<p class="cap">Family gap at T3 (translation − paraphrase, macro-F1), paired article bootstrap.</p>
+<p>Translation keeps more of the source on every model, and all three CIs exclude zero. Pegasus (0.74) overlaps the translators,
+consistent with it being the most conservative paraphraser in RQ1.</p>
+
+<h3>Full corpus (paraphrase only, 7 datasets, 13M predictions)</h3>
+<div class="tw"><table class=""><thead><tr><th></th><th>T0</th><th>T1</th><th>T2</th><th>T3</th><th>Retained at T3</th><th>Gain over length at T3</th></tr></thead><tbody><tr><td>Original</td><td>0.70</td><td></td><td></td><td></td><td>1.00</td><td></td></tr><tr><td>Pegasus</td><td></td><td>0.52</td><td>0.48</td><td>0.46</td><td>0.56</td><td>+0.11</td></tr><tr><td>PaLM</td><td></td><td>0.43</td><td>0.39</td><td>0.37</td><td>0.41</td><td>+0.11</td></tr><tr><td>Dipper</td><td></td><td>0.39</td><td>0.33</td><td>0.30</td><td>0.28</td><td>0.00</td></tr><tr><td>ChatGPT</td><td></td><td>0.30</td><td>0.28</td><td>0.26</td><td>0.21</td><td>+0.07</td></tr></tbody></table></div>
+<div class="tw"><table class="heat"><thead><tr><th>Retained at T3</th><th>cmv</th><th>eli5</th><th>sci_gen</th><th>tldr</th><th>wp</th><th>xsum</th><th>yelp</th><th>all</th></tr></thead><tbody><tr><td>ChatGPT</td><td class="hc" style="--a:0.17" title="ChatGPT, cmv: 0.168">0.17</td><td class="hc" style="--a:0.08" title="ChatGPT, eli5: 0.083">0.08</td><td class="hc" style="--a:0.25" title="ChatGPT, sci_gen: 0.248">0.25</td><td class="hc" style="--a:0.18" title="ChatGPT, tldr: 0.179">0.18</td><td class="hc" style="--a:0.16" title="ChatGPT, wp: 0.159">0.16</td><td class="hc" style="--a:0.20" title="ChatGPT, xsum: 0.204">0.20</td><td class="hc" style="--a:0.30" title="ChatGPT, yelp: 0.295">0.30</td><td class="hc" style="--a:0.21" title="ChatGPT, all: 0.209">0.21</td></tr><tr><td>PaLM</td><td class="hc" style="--a:0.26" title="PaLM, cmv: 0.258">0.26</td><td class="hc" style="--a:0.29" title="PaLM, eli5: 0.294">0.29</td><td class="hc" style="--a:0.50" title="PaLM, sci_gen: 0.505">0.50</td><td class="hc" style="--a:0.40" title="PaLM, tldr: 0.400">0.40</td><td class="hc" style="--a:0.46" title="PaLM, wp: 0.459">0.46</td><td class="hc" style="--a:0.51" title="PaLM, xsum: 0.512">0.51</td><td class="hc" style="--a:0.36" title="PaLM, yelp: 0.363">0.36</td><td class="hc" style="--a:0.41" title="PaLM, all: 0.410">0.41</td></tr><tr><td>Dipper</td><td class="hc" style="--a:0.34" title="Dipper, cmv: 0.338">0.34</td><td class="hc" style="--a:0.16" title="Dipper, eli5: 0.164">0.16</td><td class="hc" style="--a:0.35" title="Dipper, sci_gen: 0.346">0.35</td><td class="hc" style="--a:0.26" title="Dipper, tldr: 0.258">0.26</td><td class="hc" style="--a:0.25" title="Dipper, wp: 0.255">0.25</td><td class="hc" style="--a:0.28" title="Dipper, xsum: 0.283">0.28</td><td class="hc" style="--a:0.28" title="Dipper, yelp: 0.278">0.28</td><td class="hc" style="--a:0.28" title="Dipper, all: 0.276">0.28</td></tr><tr><td>Pegasus</td><td class="hc" style="--a:0.67" title="Pegasus, cmv: 0.666">0.67</td><td class="hc" style="--a:0.45" title="Pegasus, eli5: 0.447">0.45</td><td class="hc" style="--a:0.61" title="Pegasus, sci_gen: 0.609">0.61</td><td class="hc" style="--a:0.53" title="Pegasus, tldr: 0.532">0.53</td><td class="hc" style="--a:0.52" title="Pegasus, wp: 0.517">0.52</td><td class="hc" style="--a:0.57" title="Pegasus, xsum: 0.574">0.57</td><td class="hc" style="--a:0.57" title="Pegasus, yelp: 0.575">0.57</td><td class="hc" style="--a:0.56" title="Pegasus, all: 0.564">0.56</td></tr></tbody></table></div>
+<p>The XSum ranking holds everywhere. With about 2,000 training originals per dataset, originals are much easier to attribute
+(0.70 vs 0.47), and the share of signal paraphrases erase is larger than the small set suggested. The decline continues past round 1.</p>
+
+<h3>Much of what survives paraphrasing is length</h3>
+<p>Dipper's text models are no better than length alone at T3 (gain 0.00). With every text cut to 50 words, only Pegasus keeps a
+real signal (0.34 vs chance 0.14 on the full corpus; ChatGPT 0.16, PaLM 0.22, Dipper 0.19).</p>
+
+<h3>ChatGPT replaces the source with its own style</h3>
+<div class="tw"><table><thead><tr><th>Share attributed to OpenAI (non-OpenAI texts, T3)</th><th>Originals</th><th>ChatGPT</th><th>PaLM</th><th>Dipper</th><th>Pegasus</th></tr></thead>
+<tbody><tr><td>Matched XSum</td><td>3%</td><td><strong>34%</strong></td><td>13%</td><td>9%</td><td>11%</td></tr>
+<tr><td>Full corpus</td><td>4%</td><td><strong>55%</strong></td><td>18%</td><td>6%</td><td>5%</td></tr></tbody></table></div>
+<p>From 33% (yelp) to 74% (eli5) of ChatGPT rewrites go to the OpenAI class. Its low attribution score is a systematic relabelling
+toward its own family, not random noise. PaLM shows no analogue.</p>
+
+<h2>RQ3 · Do rewriters leave a fingerprint?</h2>
+<p>Given only a rewritten text, can a classifier tell which model produced it? 178 matched XSum documents, 5×5 article-grouped CV,
+trained on pooled T1–T3. The families have different numbers of classes, so scores are chance-corrected:
+(F1 − 1/K)/(1 − 1/K), 0 = chance, 1 = perfect.</p>
+<div class="chart">
+<div class="legend"><span><i class="sw s-trans"></i>Translators (3)</span><span><i class="sw s-para"></i>Paraphrasers (4)</span></div>
+<div class="row"><div class="lab">Char n-grams</div><div class="bars">
+<div class="bar-line" title="Char n-grams, translators (K=3): corrected 0.588 [0.523, 0.654], raw macro-F1 0.725"><div class="track"><div class="bar s-trans" style="width:58.8%"></div></div><span class="val">0.59</span></div>
+<div class="bar-line" title="Char n-grams, paraphrasers (K=4): corrected 0.540 [0.487, 0.593], raw macro-F1 0.655"><div class="track"><div class="bar s-para" style="width:54.0%"></div></div><span class="val">0.54</span></div>
+</div></div>
+<div class="row"><div class="lab">Word n-grams</div><div class="bars">
+<div class="bar-line" title="Word n-grams, translators (K=3): corrected 0.343 [0.273, 0.414], raw macro-F1 0.562"><div class="track"><div class="bar s-trans" style="width:34.3%"></div></div><span class="val">0.34</span></div>
+<div class="bar-line" title="Word n-grams, paraphrasers (K=4): corrected 0.295 [0.244, 0.344], raw macro-F1 0.471"><div class="track"><div class="bar s-para" style="width:29.5%"></div></div><span class="val">0.29</span></div>
+</div></div>
+<div class="row"><div class="lab">Stylometric (187)</div><div class="bars">
+<div class="bar-line" title="Stylometric (187), translators (K=3): corrected 0.394 [0.336, 0.452], raw macro-F1 0.596"><div class="track"><div class="bar s-trans" style="width:39.4%"></div></div><span class="val">0.39</span></div>
+<div class="bar-line" title="Stylometric (187), paraphrasers (K=4): corrected 0.600 [0.556, 0.642], raw macro-F1 0.700"><div class="track"><div class="bar s-para" style="width:60.0%"></div></div><span class="val">0.60</span></div>
+</div></div>
+<div class="row"><div class="lab">Stylometric, no sentence features</div><div class="bars">
+<div class="bar-line" title="Stylometric, no sentence features, translators (K=3): corrected 0.405 [0.346, 0.465], raw macro-F1 0.603"><div class="track"><div class="bar s-trans" style="width:40.5%"></div></div><span class="val">0.40</span></div>
+<div class="bar-line" title="Stylometric, no sentence features, paraphrasers (K=4): corrected 0.588 [0.544, 0.629], raw macro-F1 0.691"><div class="track"><div class="bar s-para" style="width:58.8%"></div></div><span class="val">0.59</span></div>
+</div></div>
+<div class="row"><div class="lab">Length only</div><div class="bars">
+<div class="bar-line" title="Length only, translators (K=3): corrected 0.211 [0.164, 0.252], raw macro-F1 0.474"><div class="track"><div class="bar s-trans" style="width:21.1%"></div></div><span class="val">0.21</span></div>
+<div class="bar-line" title="Length only, paraphrasers (K=4): corrected 0.397 [0.355, 0.436], raw macro-F1 0.547"><div class="track"><div class="bar s-para" style="width:39.7%"></div></div><span class="val">0.40</span></div>
+</div></div>
+<div class="axis"><span>0</span><span>0.5</span><span>1</span></div></div>
+<p class="cap">Chance-corrected macro-F1, pooled T1–T3.</p>
+<div class="tw"><table class=""><thead><tr><th>Model</th><th>Paraphrase (corrected)</th><th>Translation (corrected)</th><th>Difference [95% CI]</th></tr></thead><tbody><tr><td>Word n-grams</td><td>0.29</td><td>0.34</td><td>-0.05 [-0.12, 0.03]</td></tr><tr><td>Char n-grams</td><td>0.54</td><td>0.59</td><td>-0.05 [-0.10, 0.01]</td></tr><tr><td>Stylometric (187)</td><td>0.60</td><td>0.39</td><td>+0.21 [0.15, 0.26]</td></tr><tr><td>Stylometric, no sentence features</td><td>0.59</td><td>0.40</td><td>+0.18 [0.13, 0.25]</td></tr><tr><td>Length only</td><td>0.40</td><td>0.21</td><td>+0.19 [0.14, 0.23]</td></tr></tbody></table></div>
+<p class="cap">Paraphrase − translation difference, paired article bootstrap.</p>
+<ul>
+<li><strong>Translators are recognised by wording and characters</strong> (char n-grams 0.59 vs 0.54; not a reliable difference).</li>
+<li><strong>Paraphrasers are recognised by style and length:</strong> stylometric +0.21 [0.15, 0.26], length alone +0.19 [0.14, 0.23].</li>
+<li><strong>The paraphrase fingerprint grows each round</strong> (cross-round stylometric 0.53 corrected at T1 → 0.67 at T3); the translator fingerprint is flat.</li>
+<li><strong>It doesn't rely on typography</strong> and transfers to unseen sources (0.39–0.68 corrected with one source held out).</li>
+</ul>
+<h3>What carries the paraphrase fingerprint</h3>
+<div class="tw"><table class=""><thead><tr><th>Paraphraser (T3)</th><th>Length vs T0</th><th>Mean sentence length</th><th>Comma rate</th><th>MATTR</th><th>Curly quotes/dashes</th></tr></thead><tbody><tr><td>ChatGPT</td><td>0.85</td><td>21.59</td><td>0.05</td><td>0.84</td><td>0.00</td></tr><tr><td>Dipper</td><td>0.77</td><td>22.03</td><td>0.05</td><td>0.77</td><td>0.55</td></tr><tr><td>PaLM</td><td>0.91</td><td>21.17</td><td>0.04</td><td>0.82</td><td>0.26</td></tr><tr><td>Pegasus</td><td>0.67</td><td>14.75</td><td>0.02</td><td>0.80</td><td>0.00</td></tr></tbody></table></div>
+<div class="tw"><table class=""><thead><tr><th>Paraphraser</th><th>F1, stylometric</th><th>F1, char n-grams</th></tr></thead><tbody><tr><td>ChatGPT</td><td>0.78</td><td>0.84</td></tr><tr><td>PaLM</td><td>0.55</td><td>0.41</td></tr><tr><td>Dipper</td><td>0.71</td><td>0.67</td></tr><tr><td>Pegasus</td><td>0.76</td><td>0.71</td></tr></tbody></table></div>
+<div class="tw"><table class=""><thead><tr><th>Control</th><th>Paraphrase: full</th><th>Paraphrase: control</th><th>Translation: full</th><th>Translation: control</th></tr></thead><tbody><tr><td>Char n-grams, typography normalised</td><td>0.54</td><td>0.52</td><td>0.60</td><td>0.51</td></tr><tr><td>Stylometric, no typography</td><td>0.60</td><td>0.59</td><td>0.40</td><td>0.33</td></tr></tbody></table></div>
+<p>Pegasus shortens text to 67% with short sentences and few commas; Dipper shortens to 77%, lowers vocabulary diversity and adds curly
+quotes; ChatGPT trims to 85% with a stable, comma-rich style. Translators keep length at 92–99%, so only finer lexical and
+orthographic choices separate them. MADLAD's curly quotes are a large part of the translator signal.</p>
+
+<h2>Caveats</h2>
+<ul>
+<li>Six of the seven sources are LLM-generated, so a paraphraser may push a text toward a style it already had.</li>
+<li>The translation comparison is small and narrow: XSum only, 31 articles, one language pair (Spanish), greedy decoding. MT models translate sentence by sentence, Qwen whole documents.</li>
+<li>Word retention and style are not compared for translation, because the translated texts are not in the repo.</li>
+<li>Information metrics are heuristics: a paraphrased entity name or reformatted number counts as a loss.</li>
+<li>RQ2/RQ3 use fixed, untuned classical models: they measure relative survival of the signal, not the best achievable attribution.</li>
+<li>Invalid generations are counted as attrition and excluded, never repaired.</li>
+</ul>
+<p class="cap">Source: <code>Sam/notebooks/sot_analysis.ipynb</code>, <code>rq2_source_attribution.ipynb</code>, <code>rq3_rewriter_fingerprint.ipynb</code>; tables in <code>Sam/results/</code>; metric definitions in <code>Sam/docs/metric_standard.md</code>.</p>
+</main>
+</body></html>
