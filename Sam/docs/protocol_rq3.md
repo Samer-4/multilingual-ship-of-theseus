@@ -68,7 +68,7 @@ RQ2 protocol is in `docs/protocol_rq2.md`, and RQ1 metrics are in `docs/metric_s
 
 **What each check tests:**
 - **Cross-round:** is the fingerprint the same at every round, or does it change as rewriting accumulates?
-- **Leave one source out:** does it transfer to authors the classifier never saw?
+- **Leave one source out:** does it transfer to sources the classifier never saw?
 - **Typography:** does it survive without orthographic cues such as curly quotes and long dashes?
 - **No sentence features:** does it depend on how the rewriter segments sentences?
 - **Length only:** how much of it is just length?

@@ -4,7 +4,7 @@
 2. **Short answer.**
    - **Paraphrasing erases more of the source than translation.** It erases much of the source signal, and more of it than round-trip translation does.
    - **Much of what survives paraphrasing is just text length.**
-   - **ChatGPT replaces the author's style with its own.** On all 7 datasets, 55% of its rewrites of non-OpenAI texts are attributed to OpenAI.
+   - **ChatGPT replaces the source's style with its own.** On all 7 datasets, 55% of its rewrites of non-OpenAI texts are attributed to OpenAI.
    - **Most of the loss happens in round 1,** though it keeps growing through T3.
 
 Source: `notebooks/rq2_source_attribution.ipynb`. Protocol: `docs/protocol_rq2.md`. Tables and figures: `results/rq2_attribution/`.
@@ -129,7 +129,7 @@ This heatmap covers the matched XSum set and counts every true source, OpenAI in
 
 ## 5. The shared opening is not the signal
 
-Removing the ~30-word shared opening leaves T0 scores the same or higher (char n-grams 0.42 → 0.47 on matched XSum). The opening is identical across sources, so it carries content, not authorship. This reproduces Samer's finding.
+Removing the ~30-word shared opening leaves T0 scores the same or higher (char n-grams 0.42 → 0.47 on matched XSum). The opening is identical across sources, so it carries content, not the source signal. This reproduces Samer's finding.
 
 ---
 

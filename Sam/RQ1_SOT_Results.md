@@ -78,7 +78,7 @@ The decay gap is retained content (BERTScore) minus retained style, at T3, mean 
 | Pegasus | 0.52 | **0.24** | 0.54 | 0.43 | 0.62 |
 
 - **Punctuation is the most fragile style family for every paraphraser.** Syntax and character n-grams hold best (Pegasus's syntax is the exception).
-- **By source,** texts originally written by Eleuther-AI lose the most style (Dipper keeps only 0.08). OpenAI- and LLAMA-authored texts keep the most.
+- **By source,** texts originally written by Eleuther-AI lose the most style (Dipper keeps only 0.08). Texts from the OpenAI and LLAMA sources keep the most.
 
 ![Retained style at T3 by feature family and by original source](results/sot_analysis/style_blocks_and_sources.png)
 
