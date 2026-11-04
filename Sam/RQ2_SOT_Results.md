@@ -1,12 +1,11 @@
 # RQ2: Can the original source of a text still be identified after rewriting?
 
-**Question.** Each original text in the Ship of Theseus corpus was written by a human or by one of six LLMs (BigScience, Eleuther-AI, LLAMA, OpenAI, PaLM, Tsinghua). A classifier trained on **original** texts learns to recognise the source. How well does it still recognise it after one, two or three rewrites? And does round-trip translation (English → Spanish → English) behave differently from English paraphrasing?
-
-**Short answer.**
-- **Paraphrasing erases more of the source than translation.** It erases much of the source signal, and more of it than round-trip translation does.
-- **Much of what survives paraphrasing is just text length.**
-- **ChatGPT replaces the author's style with its own.** On all 7 datasets, 55% of its rewrites of non-OpenAI texts are attributed to OpenAI.
-- **Most of the loss happens in round 1,** though it keeps growing through T3.
+1. **Question.** Each original text in the Ship of Theseus corpus was written by a human or by one of six LLMs (BigScience, Eleuther-AI, LLAMA, OpenAI, PaLM, Tsinghua). A classifier trained on **original** texts learns to recognise the source. How well does it still recognise it after one, two or three rewrites? And does round-trip translation (English → Spanish → English) behave differently from English paraphrasing?
+2. **Short answer.**
+   - **Paraphrasing erases more of the source than translation.** It erases much of the source signal, and more of it than round-trip translation does.
+   - **Much of what survives paraphrasing is just text length.**
+   - **ChatGPT replaces the author's style with its own.** On all 7 datasets, 55% of its rewrites of non-OpenAI texts are attributed to OpenAI.
+   - **Most of the loss happens in round 1,** though it keeps growing through T3.
 
 Source: `notebooks/rq2_source_attribution.ipynb`. Protocol: `docs/protocol_rq2.md`. Tables and figures: `results/rq2_attribution/`.
 
@@ -27,6 +26,7 @@ Source: `notebooks/rq2_source_attribution.ipynb`. Protocol: `docs/protocol_rq2.m
 **Retained attribution** = (macro-F1 at Tk − chance) / (macro-F1 at T0 − chance). This is RQ1's 1 → 0 scale: 1 means as identifiable as the original, 0 means chance.
 
 Two scopes:
+
 - **Matched XSum (translation vs paraphrase):** 178 documents and 31 articles that all 3 translators (MADLAD-400-3B, NLLB-200-1.3B, Qwen3-4B) and all 4 paraphrasers completed.
 - **Full corpus (paraphrase only):** 16,682 originals, 2,996 articles, 7 datasets. Each dataset has its own classifiers, and the results are pooled. 13M predictions; run on Colab.
 
@@ -60,7 +60,7 @@ Character n-grams at T3:
 - **Pegasus is the exception** (74%), overlapping the translators. It is also the most conservative paraphraser in RQ1.
 - **Consistent with RQ1:** translation preserves wording and style more than paraphrase.
 
-Figure: `attribution_curves.png`.
+![Source attribution macro-F1 after paraphrase vs translation, same 178 XSum documents](results/rq2_attribution/attribution_curves.png)
 
 ## 2. Full corpus: all 7 datasets (paraphrase only)
 
@@ -89,7 +89,9 @@ Retained attribution at T3 by dataset:
   - Paraphrases gain far less, so the *share* of the signal they erase is larger than the small XSum set suggested.
 - **The loss continues past round 1.** Round 1 removes most of the signal, but the further decline from T1 to T3 is now clear for every paraphraser. The 31-article set was too small to show it.
 
-Figures: `full_attribution_curves.png`, `full_retained_by_dataset.png`.
+![Source attribution macro-F1 after paraphrase, all 7 datasets pooled](results/rq2_attribution/full_attribution_curves.png)
+
+![Retained attribution at T3 by dataset and paraphraser](results/rq2_attribution/full_retained_by_dataset.png)
 
 ## 3. Much of what survives paraphrasing is length
 
@@ -105,6 +107,7 @@ Figures: `full_attribution_curves.png`, `full_retained_by_dataset.png`.
 | Pegasus | 0.27 | 0.34 |
 
   Chance is 0.14: only Pegasus keeps a real signal beyond length.
+
 - **Caveat:** truncation does not remove length completely. Some texts are shorter than 50 words, and sentence statistics remain, so length-only still scores 0.30-0.32 at T0.
 
 ## 4. ChatGPT replaces the source with its own style
@@ -120,7 +123,9 @@ Share of texts attributed to **OpenAI**, counting only texts whose true source i
 - **What this means:** the classifier is not just losing the source; it increasingly detects the rewriter. ChatGPT's low attribution score is largely a **systematic relabelling** toward its own family, not random noise. This matches RQ3, where paraphrasers stamp their own style.
 - **No PaLM analogue:** PaLM rewrites are attributed to PaLM 16% of the time (originals 5%), but Dipper rewrites even more often (19%). So there is no PaLM-specific takeover; the weaker pattern seen on the 31-article set did not generalise.
 
-Figure: `prediction_distribution_T3.png`.
+![Share of predictions per source class at T3, matched XSum](results/rq2_attribution/prediction_distribution_T3.png)
+
+This heatmap covers the matched XSum set and counts every true source, OpenAI included. On that basis 39% of ChatGPT's T3 rewrites are predicted as OpenAI, against 14% of the originals.
 
 ## 5. The shared opening is not the signal
 

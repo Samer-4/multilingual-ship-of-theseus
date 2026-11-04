@@ -50,7 +50,9 @@ Retained at T3, mean [95% CI]. Higher means more preserved.
 - **Wording goes first, meaning stays.** Every paraphraser keeps far more meaning (MPNet 0.68–0.86) than wording (BLEU 0.07–0.31).
 - **PaLM preserves the most** on the headline content and style measures. **Dipper preserves the least.** ChatGPT changes the wording heavily (BLEU 0.17) but keeps meaning about as well as PaLM (MPNet 0.86).
 - **Intensity matters.** Pegasus-slight keeps 80% of style. Dipper-high produces text no closer to the original than an unrelated document, and below the floor on style.
-- **The ranking depends on the metric.** Embedding cosines (MPNet, E5) compress the differences; BERTScore and the lexical metrics separate the paraphrasers far more. Figure: `decay_curves.png`.
+- **The ranking depends on the metric.** Embedding cosines (MPNet, E5) compress the differences; BERTScore and the lexical metrics separate the paraphrasers far more.
+
+![Retained wording, meaning and style from T0 to T3 for each paraphraser](results/sot_analysis/decay_curves.png)
 
 ## 2. Style decays faster than meaning
 
@@ -64,6 +66,8 @@ The decay gap is retained content (BERTScore) minus retained style, at T3, mean 
 - **The gap grows over rounds.** Pegasus's gap rises from 0.005 at T1 to 0.063 at T3. Dipper's starts slightly negative at T1 (−0.008).
 - **ChatGPT has the widest gap:** it keeps meaning but rewrites in its own voice.
 
+![Retained content, style and words per paraphraser, T0 to T3](results/sot_analysis/style_vs_content.png)
+
 **Which style features go first** (retained at T3, by family):
 
 | | Surface | Punctuation | Function words | Syntax | Character |
@@ -74,7 +78,9 @@ The decay gap is retained content (BERTScore) minus retained style, at T3, mean 
 | Pegasus | 0.52 | **0.24** | 0.54 | 0.43 | 0.62 |
 
 - **Punctuation is the most fragile style family for every paraphraser.** Syntax and character n-grams hold best (Pegasus's syntax is the exception).
-- **By source,** texts originally written by Eleuther-AI lose the most style (Dipper keeps only 0.08). OpenAI- and LLAMA-authored texts keep the most. Figure: `style_blocks_and_sources.png`.
+- **By source,** texts originally written by Eleuther-AI lose the most style (Dipper keeps only 0.08). OpenAI- and LLAMA-authored texts keep the most.
+
+![Retained style at T3 by feature family and by original source](results/sot_analysis/style_blocks_and_sources.png)
 
 ## 3. Information preservation
 
@@ -89,7 +95,9 @@ Retained at T3:
 
 - **ChatGPT keeps the most facts:** 81% of named entities and 65% of numbers. **Dipper loses nearly all** quantities.
 - **Pegasus covers most original sentences** (0.83) but drops entities and numbers inside them.
-- **Warnings are common.** 75–97% of T3 rewrites trigger at least one content warning (a lost entity, a changed number or an uncovered sentence). These are heuristic flags, not confirmed errors. Figure: `information_curves.png`.
+- **Warnings are common.** 75–97% of T3 rewrites trigger at least one content warning (a lost entity, a changed number or an uncovered sentence). These are heuristic flags, not confirmed errors.
+
+![chrF, E5 and information preservation from T0 to T3](results/sot_analysis/information_curves.png)
 
 ## 4. Most of the change happens in round 1
 
@@ -126,7 +134,9 @@ Translation minus paraphrase at T3 (per-document family means, CI resamples arti
 - **Translation preserves more on every metric.** The gap is largest for exact wording and numbers, and smallest for overall meaning.
 - **NLLB preserves the most of any rewriter on every metric** (BERTScore 0.84, entity recall 0.94).
 - **Not a clean split.** The best paraphraser overlaps the weakest translator: PaLM's BERTScore of 0.76 sits close to Qwen3-4B's 0.78, and PaLM's BLEU (0.45) exceeds Qwen's (0.42).
-- **Translation converges, paraphrase drifts.** After round 1, translators change only 2–10% of words per round (2–4% by T2 → T3), while paraphrasers keep changing 15–42% (Dipper 86–100%). Figure: `translation_vs_paraphrase.png`.
+- **Translation converges, paraphrase drifts.** After round 1, translators change only 2–10% of words per round (2–4% by T2 → T3), while paraphrasers keep changing 15–42% (Dipper 86–100%).
+
+![Round-trip translation (dashed) vs English paraphrase (solid) on the same 178 XSum originals](results/sot_analysis/translation_vs_paraphrase.png)
 
 ---
 
